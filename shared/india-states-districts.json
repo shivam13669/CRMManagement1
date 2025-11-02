@@ -58,6 +58,7 @@
       "name": "Assam",
       "districts": [
         "Baksa",
+        "Bajali",
         "Barpeta",
         "Biswanath",
         "Bongaigaon",
@@ -87,8 +88,10 @@
         "Sivasagar",
         "Sonitpur",
         "South Salmara-Mankachar",
+        "Tamulpur",
         "Tinsukia",
-        "Udalguri"
+        "Udalguri",
+        "West Karbi Anglong"
       ]
     },
     {
