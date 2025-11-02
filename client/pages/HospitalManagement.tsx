@@ -153,7 +153,6 @@ export default function HospitalManagement() {
     }
 
     if (
-      !formData.full_name ||
       !formData.email ||
       !formData.password ||
       !formData.hospital_name ||
@@ -381,7 +380,7 @@ export default function HospitalManagement() {
                               confirmPassword: e.target.value,
                             }))
                           }
-                          placeholder="••••••••"
+                          placeholder="•••••••���"
                           required
                         />
                       </div>
