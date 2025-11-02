@@ -507,8 +507,8 @@ export default function HospitalManagement() {
                             {formData.state &&
                               statesDistricts.states
                                 .find((s) => s.name === formData.state)
-                                ?.districts.map((district) => (
-                                  <SelectItem key={district} value={district}>
+                                ?.districts.map((district, idx) => (
+                                  <SelectItem key={`${district}-${idx}`} value={district}>
                                     {district}
                                   </SelectItem>
                                 ))}
