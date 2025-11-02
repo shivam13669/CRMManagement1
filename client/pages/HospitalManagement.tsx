@@ -495,7 +495,13 @@ export default function HospitalManagement() {
                           disabled={!formData.state}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder={formData.state ? "Select District" : "Select State first"} />
+                            <SelectValue
+                              placeholder={
+                                formData.state
+                                  ? "Select District"
+                                  : "Select State first"
+                              }
+                            />
                           </SelectTrigger>
                           <SelectContent className="max-h-64">
                             {formData.state &&

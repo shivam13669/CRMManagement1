@@ -75,7 +75,15 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     }: CreateHospitalRequest = req.body;
 
     // Validate required fields
-    if (!email || !password || !hospital_name || !full_name || !address_lane1 || !state || !district) {
+    if (
+      !email ||
+      !password ||
+      !hospital_name ||
+      !full_name ||
+      !address_lane1 ||
+      !state ||
+      !district
+    ) {
       return res.status(400).json({
         error:
           "Missing required fields: email, password, hospital_name, address_lane1, state, district, full_name",
@@ -129,7 +137,8 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     const hospital: Hospital = {
       user_id: userId,
       hospital_name,
-      address: `${address_lane1}${address_lane2 ? ", " + address_lane2 : ""}, ${district}, ${state} ${pin_code || ""}`.trim(),
+      address:
+        `${address_lane1}${address_lane2 ? ", " + address_lane2 : ""}, ${district}, ${state} ${pin_code || ""}`.trim(),
       address_lane1,
       address_lane2,
       state,

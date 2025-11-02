@@ -416,21 +416,11 @@ async function runMigrations(): Promise<void> {
 
       if (!hasAddressLane1) {
         console.log("📝 Adding address fields to hospitals table...");
-        db.run(
-          "ALTER TABLE hospitals ADD COLUMN address_lane1 TEXT",
-        );
-        db.run(
-          "ALTER TABLE hospitals ADD COLUMN address_lane2 TEXT",
-        );
-        db.run(
-          "ALTER TABLE hospitals ADD COLUMN state TEXT",
-        );
-        db.run(
-          "ALTER TABLE hospitals ADD COLUMN district TEXT",
-        );
-        db.run(
-          "ALTER TABLE hospitals ADD COLUMN pin_code TEXT",
-        );
+        db.run("ALTER TABLE hospitals ADD COLUMN address_lane1 TEXT");
+        db.run("ALTER TABLE hospitals ADD COLUMN address_lane2 TEXT");
+        db.run("ALTER TABLE hospitals ADD COLUMN state TEXT");
+        db.run("ALTER TABLE hospitals ADD COLUMN district TEXT");
+        db.run("ALTER TABLE hospitals ADD COLUMN pin_code TEXT");
         console.log("✅ Address fields added successfully");
       }
     } catch (error) {
@@ -1319,31 +1309,36 @@ export function getUsersByRole(role: string): any[] {
 // Hospital operations
 export function createHospital(hospital: Hospital): number {
   try {
-    db.run(`
+    db.run(
+      `
       INSERT INTO hospitals (
         user_id, hospital_name, address, phone_number, hospital_type,
         license_number, number_of_ambulances, number_of_beds, departments,
         google_map_enabled, google_map_link, created_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
-    `, [
-      hospital.user_id,
-      hospital.hospital_name,
-      hospital.address,
-      hospital.phone_number || null,
-      hospital.hospital_type || null,
-      hospital.license_number || null,
-      hospital.number_of_ambulances || 0,
-      hospital.number_of_beds || 0,
-      hospital.departments || null,
-      hospital.google_map_enabled ? 1 : 0,
-      hospital.google_map_link || null,
-    ]);
+    `,
+      [
+        hospital.user_id,
+        hospital.hospital_name,
+        hospital.address,
+        hospital.phone_number || null,
+        hospital.hospital_type || null,
+        hospital.license_number || null,
+        hospital.number_of_ambulances || 0,
+        hospital.number_of_beds || 0,
+        hospital.departments || null,
+        hospital.google_map_enabled ? 1 : 0,
+        hospital.google_map_link || null,
+      ],
+    );
 
     const result = db.exec("SELECT last_insert_rowid() as id");
     const hospitalId = result[0].values[0][0];
 
     saveDatabase();
-    console.log(`✅ Hospital created: ${hospital.hospital_name} - ID: ${hospitalId}`);
+    console.log(
+      `✅ Hospital created: ${hospital.hospital_name} - ID: ${hospitalId}`,
+    );
 
     return hospitalId as number;
   } catch (error) {
@@ -1354,14 +1349,22 @@ export function createHospital(hospital: Hospital): number {
 
 export function getHospitalByUserId(userId: number): any | undefined {
   try {
-    const result = db.exec(`
+    const result = db.exec(
+      `
       SELECT h.*, u.email, u.full_name, u.phone as user_phone
       FROM hospitals h
       JOIN users u ON h.user_id = u.id
       WHERE h.user_id = ?
-    `, [userId]);
+    `,
+      [userId],
+    );
 
-    if (!result || result.length === 0 || !result[0] || result[0].values.length === 0) {
+    if (
+      !result ||
+      result.length === 0 ||
+      !result[0] ||
+      result[0].values.length === 0
+    ) {
       return undefined;
     }
 
@@ -1410,7 +1413,10 @@ export function getAllHospitals(): any[] {
   }
 }
 
-export function updateHospital(userId: number, updates: Partial<Hospital>): boolean {
+export function updateHospital(
+  userId: number,
+  updates: Partial<Hospital>,
+): boolean {
   try {
     const updateFields: string[] = [];
     const values: any[] = [];
@@ -1469,7 +1475,7 @@ export function updateHospital(userId: number, updates: Partial<Hospital>): bool
 
     db.run(
       `UPDATE hospitals SET ${updateFields.join(", ")} WHERE user_id = ?`,
-      values
+      values,
     );
 
     saveDatabase();
