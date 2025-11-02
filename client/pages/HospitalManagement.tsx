@@ -292,13 +292,19 @@ export default function HospitalManagement() {
     }));
   }, [filteredHospitals]);
 
-  // Deduplicated list of districts for the selected state to prevent duplicate options
+  // Sorted states list and deduplicated, sorted districts for selected state
+  const sortedStates = useMemo(() => {
+    return [...statesDistricts.states]
+      .map((s) => ({ name: s.name, districts: Array.isArray(s.districts) ? [...s.districts] : [] }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+
   const selectedDistricts = useMemo(() => {
     if (!formData.state) return [] as string[];
-    const stateObj = statesDistricts.states.find((s) => s.name === formData.state);
+    const stateObj = sortedStates.find((s) => s.name === formData.state);
     const districts = (stateObj?.districts || []).filter(Boolean) as string[];
-    return Array.from(new Set(districts));
-  }, [formData.state]);
+    return Array.from(new Set(districts)).sort((a, b) => a.localeCompare(b));
+  }, [formData.state, sortedStates]);
 
   const hospitalTypes = useMemo(() => {
     return Array.from(
