@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Checkbox } from "../components/ui/checkbox";
+import statesDistricts from "../../shared/india-states-districts.json";
 import {
   Plus,
   MapPin,
