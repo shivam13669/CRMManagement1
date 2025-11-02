@@ -55,7 +55,6 @@ export default function HospitalManagement() {
   // Form state
   const [formData, setFormData] = useState({
     full_name: "",
-    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -69,6 +68,7 @@ export default function HospitalManagement() {
     location_enabled: false,
     location_link: "",
   });
+  const [countryCode, setCountryCode] = useState("+91");
   const [contactNumberInput, setContactNumberInput] = useState("");
   const [contactNumbers, setContactNumbers] = useState<string[]>([]);
 
@@ -99,9 +99,10 @@ export default function HospitalManagement() {
   };
 
   const addContactNumber = () => {
-    const v = contactNumberInput.trim();
-    if (!v) return;
-    setContactNumbers((prev) => Array.from(new Set([...prev, v])));
+    const digits = contactNumberInput.replace(/[^0-9]/g, "").trim();
+    if (!digits) return;
+    const formatted = `${countryCode} ${digits}`;
+    setContactNumbers((prev) => Array.from(new Set([...prev, formatted])));
     setContactNumberInput("");
   };
 
@@ -116,7 +117,7 @@ export default function HospitalManagement() {
       return;
     }
 
-    if (!formData.full_name || !formData.username || !formData.email || !formData.password || !formData.hospital_name || !formData.address) {
+    if (!formData.full_name || !formData.email || !formData.password || !formData.hospital_name || !formData.address) {
       toast({ title: "Please fill all required fields", variant: "destructive" });
       return;
     }
@@ -131,7 +132,6 @@ export default function HospitalManagement() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          username: formData.username,
           email: formData.email,
           password: formData.password,
           full_name: formData.full_name,
@@ -160,7 +160,6 @@ export default function HospitalManagement() {
       // Reset form
       setFormData({
         full_name: "",
-        username: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -174,6 +173,7 @@ export default function HospitalManagement() {
         location_enabled: false,
         location_link: "",
       });
+      setCountryCode("+91");
       setContactNumbers([]);
       setContactNumberInput("");
       setShowCreateForm(false);
@@ -227,10 +227,6 @@ export default function HospitalManagement() {
                       <Input id="full_name" value={formData.full_name} onChange={(e) => setFormData((p) => ({ ...p, full_name: e.target.value }))} placeholder="John Doe" required />
                     </div>
                     <div>
-                      <Label htmlFor="username">Username *</Label>
-                      <Input id="username" value={formData.username} onChange={(e) => setFormData((p) => ({ ...p, username: e.target.value }))} placeholder="johndoe" required />
-                    </div>
-                    <div>
                       <Label htmlFor="email">Email *</Label>
                       <Input id="email" type="email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} placeholder="admin@hospital.com" required />
                     </div>
@@ -277,9 +273,26 @@ export default function HospitalManagement() {
                     <div className="md:col-span-2">
                       <Label>Hospital Contact number(s)</Label>
                       <div className="flex gap-2 mt-1">
+                        <Select value={countryCode} onValueChange={setCountryCode}>
+                          <SelectTrigger className="w-24">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-64">
+                            <SelectItem value="+91">+91</SelectItem>
+                            <SelectItem value="+1">+1</SelectItem>
+                            <SelectItem value="+44">+44</SelectItem>
+                            <SelectItem value="+971">+971</SelectItem>
+                            <SelectItem value="+92">+92</SelectItem>
+                            <SelectItem value="+880">+880</SelectItem>
+                            <SelectItem value="+977">+977</SelectItem>
+                            <SelectItem value="+94">+94</SelectItem>
+                            <SelectItem value="+61">+61</SelectItem>
+                            <SelectItem value="+81">+81</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <Input
                           type="tel"
-                          placeholder="Enter number and click Add"
+                          placeholder="9876543210"
                           value={contactNumberInput}
                           onChange={(e) => setContactNumberInput(e.target.value)}
                         />
