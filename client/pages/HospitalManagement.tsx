@@ -92,7 +92,11 @@ export default function HospitalManagement() {
       }
     } catch (error) {
       console.error("Failed to fetch hospitals:", error);
-      toast({ title: "Error", description: "Failed to load hospitals", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Failed to load hospitals",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -117,8 +121,17 @@ export default function HospitalManagement() {
       return;
     }
 
-    if (!formData.full_name || !formData.email || !formData.password || !formData.hospital_name || !formData.address) {
-      toast({ title: "Please fill all required fields", variant: "destructive" });
+    if (
+      !formData.full_name ||
+      !formData.email ||
+      !formData.password ||
+      !formData.hospital_name ||
+      !formData.address
+    ) {
+      toast({
+        title: "Please fill all required fields",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -140,22 +153,34 @@ export default function HospitalManagement() {
           phone_number: contactNumbers.join(","),
           hospital_type: formData.hospital_type,
           license_number: formData.license_number || undefined,
-          number_of_ambulances: parseInt(formData.number_of_ambulances || "0", 10),
+          number_of_ambulances: parseInt(
+            formData.number_of_ambulances || "0",
+            10,
+          ),
           number_of_beds: parseInt(formData.number_of_beds || "0", 10),
           departments: formData.departments || undefined,
           google_map_enabled: formData.location_enabled,
-          google_map_link: formData.location_enabled ? formData.location_link : undefined,
+          google_map_link: formData.location_enabled
+            ? formData.location_link
+            : undefined,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        toast({ title: "Error", description: data.error || "Failed to create hospital", variant: "destructive" });
+        toast({
+          title: "Error",
+          description: data.error || "Failed to create hospital",
+          variant: "destructive",
+        });
         return;
       }
 
-      toast({ title: "Hospital created", description: `\"${formData.hospital_name}\" created successfully!` });
+      toast({
+        title: "Hospital created",
+        description: `\"${formData.hospital_name}\" created successfully!`,
+      });
 
       // Reset form
       setFormData({
@@ -180,7 +205,11 @@ export default function HospitalManagement() {
       fetchHospitals();
     } catch (error) {
       console.error("Error creating hospital:", error);
-      toast({ title: "Error", description: "An unexpected error occurred", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -189,7 +218,10 @@ export default function HospitalManagement() {
   const hospitalsWithPhones = useMemo(() => {
     return hospitals.map((h) => ({
       ...h,
-      phoneList: (h.phone_number || "").split(",").map((s) => s.trim()).filter(Boolean),
+      phoneList: (h.phone_number || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     }));
   }, [hospitals]);
 
@@ -199,8 +231,12 @@ export default function HospitalManagement() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Hospital Management</h1>
-            <p className="text-gray-600 mt-2">Create and manage hospital accounts</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Hospital Management
+            </h1>
+            <p className="text-gray-600 mt-2">
+              Create and manage hospital accounts
+            </p>
           </div>
           <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
             <DialogTrigger asChild>
@@ -213,45 +249,112 @@ export default function HospitalManagement() {
               <DialogHeader>
                 <DialogTitle>Add New Hospital</DialogTitle>
                 <DialogDescription>
-                  Admin-only creation. The hospital will log in using the email and password you set here.
+                  Admin-only creation. The hospital will log in using the email
+                  and password you set here.
                 </DialogDescription>
               </DialogHeader>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Admin Account Details */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Administrator Account</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Administrator Account
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="full_name">Administrator Name *</Label>
-                      <Input id="full_name" value={formData.full_name} onChange={(e) => setFormData((p) => ({ ...p, full_name: e.target.value }))} placeholder="John Doe" required />
+                      <Input
+                        id="full_name"
+                        value={formData.full_name}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            full_name: e.target.value,
+                          }))
+                        }
+                        placeholder="John Doe"
+                        required
+                      />
                     </div>
                     <div>
                       <Label htmlFor="email">Email *</Label>
-                      <Input id="email" type="email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} placeholder="admin@hospital.com" required />
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, email: e.target.value }))
+                        }
+                        placeholder="admin@hospital.com"
+                        required
+                      />
                     </div>
                     <div>
                       <Label htmlFor="password">Password *</Label>
-                      <Input id="password" type="password" value={formData.password} onChange={(e) => setFormData((p) => ({ ...p, password: e.target.value }))} placeholder="••••••••" required />
+                      <Input
+                        id="password"
+                        type="password"
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            password: e.target.value,
+                          }))
+                        }
+                        placeholder="••••••••"
+                        required
+                      />
                     </div>
                     <div className="md:col-span-2">
-                      <Label htmlFor="confirmPassword">Confirm Password *</Label>
-                      <Input id="confirmPassword" type="password" value={formData.confirmPassword} onChange={(e) => setFormData((p) => ({ ...p, confirmPassword: e.target.value }))} placeholder="••••••••" required />
+                      <Label htmlFor="confirmPassword">
+                        Confirm Password *
+                      </Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        value={formData.confirmPassword}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            confirmPassword: e.target.value,
+                          }))
+                        }
+                        placeholder="••••••••"
+                        required
+                      />
                     </div>
                   </div>
                 </div>
 
                 {/* Hospital Details */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Hospital Information</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Hospital Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="hospital_name">Hospital Name *</Label>
-                      <Input id="hospital_name" value={formData.hospital_name} onChange={(e) => setFormData((p) => ({ ...p, hospital_name: e.target.value }))} placeholder="City General Hospital" required />
+                      <Input
+                        id="hospital_name"
+                        value={formData.hospital_name}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            hospital_name: e.target.value,
+                          }))
+                        }
+                        placeholder="City General Hospital"
+                        required
+                      />
                     </div>
                     <div>
                       <Label htmlFor="hospital_type">Hospital Type *</Label>
-                      <Select value={formData.hospital_type} onValueChange={(value) => setFormData((p) => ({ ...p, hospital_type: value }))}>
+                      <Select
+                        value={formData.hospital_type}
+                        onValueChange={(value) =>
+                          setFormData((p) => ({ ...p, hospital_type: value }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
@@ -266,14 +369,28 @@ export default function HospitalManagement() {
                     </div>
                     <div className="md:col-span-2">
                       <Label htmlFor="address">Address *</Label>
-                      <Input id="address" value={formData.address} onChange={(e) => setFormData((p) => ({ ...p, address: e.target.value }))} placeholder="123 Medical Street, City, State 12345" required />
+                      <Input
+                        id="address"
+                        value={formData.address}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            address: e.target.value,
+                          }))
+                        }
+                        placeholder="123 Medical Street, City, State 12345"
+                        required
+                      />
                     </div>
 
                     {/* Contact numbers */}
                     <div className="md:col-span-2">
                       <Label>Hospital Contact number(s)</Label>
                       <div className="flex gap-2 mt-1">
-                        <Select value={countryCode} onValueChange={setCountryCode}>
+                        <Select
+                          value={countryCode}
+                          onValueChange={setCountryCode}
+                        >
                           <SelectTrigger className="w-24">
                             <SelectValue />
                           </SelectTrigger>
@@ -294,19 +411,32 @@ export default function HospitalManagement() {
                           type="tel"
                           placeholder="9876543210"
                           value={contactNumberInput}
-                          onChange={(e) => setContactNumberInput(e.target.value)}
+                          onChange={(e) =>
+                            setContactNumberInput(e.target.value)
+                          }
                         />
-                        <Button type="button" variant="secondary" onClick={addContactNumber}>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={addContactNumber}
+                        >
                           Add
                         </Button>
                       </div>
                       {contactNumbers.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {contactNumbers.map((num) => (
-                            <span key={num} className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                            <span
+                              key={num}
+                              className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-blue-50 text-blue-700 border border-blue-200"
+                            >
                               <Phone className="w-3 h-3" />
                               {num}
-                              <button type="button" onClick={() => removeContactNumber(num)} aria-label={`Remove ${num}`}>
+                              <button
+                                type="button"
+                                onClick={() => removeContactNumber(num)}
+                                aria-label={`Remove ${num}`}
+                              >
                                 <Trash2 className="w-3 h-3 text-red-500" />
                               </button>
                             </span>
@@ -316,52 +446,132 @@ export default function HospitalManagement() {
                     </div>
 
                     <div>
-                      <Label htmlFor="number_of_ambulances">Numbers of ambulance</Label>
-                      <Input id="number_of_ambulances" type="number" value={formData.number_of_ambulances} onChange={(e) => setFormData((p) => ({ ...p, number_of_ambulances: e.target.value }))} placeholder="0" />
+                      <Label htmlFor="number_of_ambulances">
+                        Numbers of ambulance
+                      </Label>
+                      <Input
+                        id="number_of_ambulances"
+                        type="number"
+                        value={formData.number_of_ambulances}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            number_of_ambulances: e.target.value,
+                          }))
+                        }
+                        placeholder="0"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="number_of_beds">Numbers of beds</Label>
-                      <Input id="number_of_beds" type="number" value={formData.number_of_beds} onChange={(e) => setFormData((p) => ({ ...p, number_of_beds: e.target.value }))} placeholder="0" />
+                      <Input
+                        id="number_of_beds"
+                        type="number"
+                        value={formData.number_of_beds}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            number_of_beds: e.target.value,
+                          }))
+                        }
+                        placeholder="0"
+                      />
                     </div>
                     <div>
-                      <Label htmlFor="license_number">License/registration number</Label>
-                      <Input id="license_number" value={formData.license_number} onChange={(e) => setFormData((p) => ({ ...p, license_number: e.target.value }))} placeholder="LIC123456" />
+                      <Label htmlFor="license_number">
+                        License/registration number
+                      </Label>
+                      <Input
+                        id="license_number"
+                        value={formData.license_number}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            license_number: e.target.value,
+                          }))
+                        }
+                        placeholder="LIC123456"
+                      />
                     </div>
                     <div className="md:col-span-2">
                       <Label htmlFor="departments">Departments</Label>
-                      <Input id="departments" value={formData.departments} onChange={(e) => setFormData((p) => ({ ...p, departments: e.target.value }))} placeholder="Cardiology, Orthopedics, Pediatrics" />
+                      <Input
+                        id="departments"
+                        value={formData.departments}
+                        onChange={(e) =>
+                          setFormData((p) => ({
+                            ...p,
+                            departments: e.target.value,
+                          }))
+                        }
+                        placeholder="Cardiology, Orthopedics, Pediatrics"
+                      />
                     </div>
                   </div>
                 </div>
 
                 {/* Location */}
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Location</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Location
+                  </h3>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id="location_enabled"
                         checked={formData.location_enabled}
-                        onCheckedChange={(checked) => setFormData((p) => ({ ...p, location_enabled: Boolean(checked) }))}
+                        onCheckedChange={(checked) =>
+                          setFormData((p) => ({
+                            ...p,
+                            location_enabled: Boolean(checked),
+                          }))
+                        }
                       />
-                      <Label htmlFor="location_enabled" className="cursor-pointer">Enable location link</Label>
+                      <Label
+                        htmlFor="location_enabled"
+                        className="cursor-pointer"
+                      >
+                        Enable location link
+                      </Label>
                     </div>
 
                     {formData.location_enabled && (
                       <div>
                         <Label htmlFor="location_link">Location URL</Label>
-                        <Input id="location_link" type="url" placeholder="Paste any map/location link" value={formData.location_link} onChange={(e) => setFormData((p) => ({ ...p, location_link: e.target.value }))} />
-                        <p className="text-xs text-gray-500 mt-2">This can be any URL (e.g., Google Maps). A "Show Location" button will open it in a new tab.</p>
+                        <Input
+                          id="location_link"
+                          type="url"
+                          placeholder="Paste any map/location link"
+                          value={formData.location_link}
+                          onChange={(e) =>
+                            setFormData((p) => ({
+                              ...p,
+                              location_link: e.target.value,
+                            }))
+                          }
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                          This can be any URL (e.g., Google Maps). A "Show
+                          Location" button will open it in a new tab.
+                        </p>
                       </div>
                     )}
                   </div>
                 </div>
 
                 <div className="flex justify-end gap-2 pt-2">
-                  <Button type="button" variant="outline" onClick={() => setShowCreateForm(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCreateForm(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={loading} className="min-w-[120px]">
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="min-w-[120px]"
+                  >
                     {loading ? "Creating..." : "Create Hospital"}
                   </Button>
                 </div>
@@ -372,7 +582,9 @@ export default function HospitalManagement() {
 
         {/* Hospitals List */}
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Hospital Accounts ({hospitals.length})</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+            Hospital Accounts ({hospitals.length})
+          </h2>
 
           {loading && !hospitals.length ? (
             <Card>
@@ -387,7 +599,9 @@ export default function HospitalManagement() {
               <CardContent className="pt-6">
                 <div className="text-center py-8">
                   <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-4">No hospital accounts created yet.</p>
+                  <p className="text-gray-600 mb-4">
+                    No hospital accounts created yet.
+                  </p>
                   <Button onClick={() => setShowCreateForm(true)}>
                     <Plus className="w-4 h-4 mr-2" />
                     Create First Hospital
@@ -398,14 +612,23 @@ export default function HospitalManagement() {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {hospitalsWithPhones.map((hospital) => (
-                <Card key={hospital.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={hospital.id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">{hospital.hospital_name}</h3>
-                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${hospital.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                            {hospital.status === "active" ? "Active" : "Inactive"}
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {hospital.hospital_name}
+                          </h3>
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full font-medium ${hospital.status === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                          >
+                            {hospital.status === "active"
+                              ? "Active"
+                              : "Inactive"}
                           </span>
                         </div>
 
@@ -416,10 +639,16 @@ export default function HospitalManagement() {
                           </div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <Phone className="w-4 h-4" />
-                            {hospital.phoneList && hospital.phoneList.length > 0 ? (
+                            {hospital.phoneList &&
+                            hospital.phoneList.length > 0 ? (
                               <div className="flex flex-wrap gap-1">
                                 {hospital.phoneList.map((n) => (
-                                  <span key={n} className="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 border">{n}</span>
+                                  <span
+                                    key={n}
+                                    className="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 border"
+                                  >
+                                    {n}
+                                  </span>
                                 ))}
                               </div>
                             ) : (
@@ -431,26 +660,42 @@ export default function HospitalManagement() {
                         <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
                           <div>
                             <p className="text-xs text-gray-500">Type</p>
-                            <p className="font-semibold text-sm">{hospital.hospital_type || "N/A"}</p>
+                            <p className="font-semibold text-sm">
+                              {hospital.hospital_type || "N/A"}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Ambulances</p>
-                            <p className="font-semibold text-sm">{hospital.number_of_ambulances || 0}</p>
+                            <p className="font-semibold text-sm">
+                              {hospital.number_of_ambulances || 0}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Beds</p>
-                            <p className="font-semibold text-sm">{hospital.number_of_beds || 0}</p>
+                            <p className="font-semibold text-sm">
+                              {hospital.number_of_beds || 0}
+                            </p>
                           </div>
                         </div>
 
-                        {hospital.google_map_enabled && hospital.google_map_link && (
-                          <div className="mt-4 pt-4 border-t">
-                            <Button onClick={() => window.open(hospital.google_map_link!, "_blank")} variant="outline" size="sm">
-                              <MapPin className="w-4 h-4 mr-2" />
-                              Show Location
-                            </Button>
-                          </div>
-                        )}
+                        {hospital.google_map_enabled &&
+                          hospital.google_map_link && (
+                            <div className="mt-4 pt-4 border-t">
+                              <Button
+                                onClick={() =>
+                                  window.open(
+                                    hospital.google_map_link!,
+                                    "_blank",
+                                  )
+                                }
+                                variant="outline"
+                                size="sm"
+                              >
+                                <MapPin className="w-4 h-4 mr-2" />
+                                Show Location
+                              </Button>
+                            </div>
+                          )}
                       </div>
 
                       <div className="flex flex-col gap-2">
