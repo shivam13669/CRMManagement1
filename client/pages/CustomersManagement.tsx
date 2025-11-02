@@ -227,239 +227,240 @@ export default function CustomersManagement() {
     <Layout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Customer Management
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Manage and view all registered customers in your healthcare system
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Customer Management
+            </h1>
+            <p className="text-gray-600 mt-2">
+              Manage and view all registered customers in your healthcare system
+            </p>
+          </div>
+          <Button variant="outline" className="w-full sm:w-auto">
+            <Download className="w-4 h-4 mr-2" />
+            Export List
+          </Button>
         </div>
 
-        {/* Filters & Search */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="flex gap-4">
-                    <Input
-                      placeholder="Search by name, email, or phone..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" size="icon">
-                          <Filter className="w-4 h-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-80">
-                        <div className="space-y-4">
-                          <div>
-                            <Label>Gender</Label>
-                            <Select
-                              value={filters.gender}
-                              onValueChange={(value) =>
-                                setFilters((prev) => ({
-                                  ...prev,
-                                  gender: value,
-                                }))
-                              }
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="all">All Genders</SelectItem>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label>Blood Group</Label>
-                            <Select
-                              value={filters.bloodGroup}
-                              onValueChange={(value) =>
-                                setFilters((prev) => ({
-                                  ...prev,
-                                  bloodGroup: value,
-                                }))
-                              }
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="all">
-                                  All Blood Groups
-                                </SelectItem>
-                                {bloodGroupsInCustomers.map((bg) => (
-                                  <SelectItem key={bg} value={bg || "unknown"}>
-                                    {bg || "Unknown"}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label>Age Range</Label>
-                            <Select
-                              value={filters.ageRange}
-                              onValueChange={(value) =>
-                                setFilters((prev) => ({
-                                  ...prev,
-                                  ageRange: value,
-                                }))
-                              }
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="all">All Ages</SelectItem>
-                                <SelectItem value="0-18">0-18 years</SelectItem>
-                                <SelectItem value="19-30">
-                                  19-30 years
-                                </SelectItem>
-                                <SelectItem value="31-50">
-                                  31-50 years
-                                </SelectItem>
-                                <SelectItem value="51+">51+ years</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label>Medical Conditions</Label>
-                            <Select
-                              value={filters.hasConditions}
-                              onValueChange={(value) =>
-                                setFilters((prev) => ({
-                                  ...prev,
-                                  hasConditions: value,
-                                }))
-                              }
-                            >
-                              <SelectTrigger className="mt-1">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="all">
-                                  All Customers
-                                </SelectItem>
-                                <SelectItem value="yes">
-                                  Has Conditions
-                                </SelectItem>
-                                <SelectItem value="no">
-                                  No Conditions
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <Card>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {customers.length}
                   </div>
-
-                  <div className="flex gap-4 text-sm">
-                    <div className="bg-blue-50 p-4 rounded-lg flex items-center gap-2">
-                      <Users className="w-5 h-5 text-blue-600" />
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-600">
-                          Total Customers
-                        </p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {customers.length}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-green-50 p-4 rounded-lg flex items-center gap-2">
-                      <span>👨</span>
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-600">
-                          Male Customers
-                        </p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {customers.filter((c) => c.gender === "male").length}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-pink-50 p-4 rounded-lg flex items-center gap-2">
-                      <span>👩</span>
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-600">
-                          Female Customers
-                        </p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {
-                            customers.filter((c) => c.gender === "female")
-                              .length
-                          }
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-orange-50 p-4 rounded-lg flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-orange-600" />
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-600">
-                          This Month
-                        </p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {
-                            customers.filter((c) => {
-                              const createdDate = new Date(c.created_at);
-                              const now = new Date();
-                              return (
-                                createdDate.getMonth() === now.getMonth() &&
-                                createdDate.getFullYear() === now.getFullYear()
-                              );
-                            }).length
-                          }
-                        </p>
-                      </div>
-                    </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Total Customers
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Search Customers</CardTitle>
-                <CardDescription>
-                  Find customers by name, email, or phone number
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+          <Card>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                  <span className="text-xl text-white">👨</span>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {customers.filter((c) => c.gender === "male").length}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Male Customers
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-500 rounded-lg flex items-center justify-center">
+                  <span className="text-xl text-white">👩</span>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {customers.filter((c) => c.gender === "female").length}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Female Customers
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                  <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {
+                      customers.filter((c) => {
+                        const createdDate = new Date(c.created_at);
+                        const now = new Date();
+                        return (
+                          createdDate.getMonth() === now.getMonth() &&
+                          createdDate.getFullYear() === now.getFullYear()
+                        );
+                      }).length
+                    }
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    This Month
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search and Filter */}
+        <Card>
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
-                    placeholder="Search customers..."
+                    placeholder="Search by name, email, phone, or blood group..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
                   />
-                  <Button className="w-full">
-                    <Search className="w-4 h-4 mr-2" />
-                    Advanced Search
-                  </Button>
-                  <Button variant="outline" className="w-full">
-                    <Download className="w-4 h-4 mr-2" />
-                    Export List
-                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              </div>
+              <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full sm:w-auto">
+                    <Filter className="w-4 h-4 mr-2" />
+                    Filter
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Gender</Label>
+                      <Select
+                        value={filters.gender}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            gender: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Genders</SelectItem>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Blood Group</Label>
+                      <Select
+                        value={filters.bloodGroup}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            bloodGroup: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">
+                            All Blood Groups
+                          </SelectItem>
+                          {bloodGroupsInCustomers.map((bg) => (
+                            <SelectItem key={bg} value={bg || "unknown"}>
+                              {bg || "Unknown"}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Age Range</Label>
+                      <Select
+                        value={filters.ageRange}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            ageRange: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Ages</SelectItem>
+                          <SelectItem value="0-18">0-18 years</SelectItem>
+                          <SelectItem value="19-30">
+                            19-30 years
+                          </SelectItem>
+                          <SelectItem value="31-50">
+                            31-50 years
+                          </SelectItem>
+                          <SelectItem value="51+">51+ years</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Medical Conditions</Label>
+                      <Select
+                        value={filters.hasConditions}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            hasConditions: value,
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">
+                            All Customers
+                          </SelectItem>
+                          <SelectItem value="yes">
+                            Has Conditions
+                          </SelectItem>
+                          <SelectItem value="no">
+                            No Conditions
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Customers Table */}
         <Card>
