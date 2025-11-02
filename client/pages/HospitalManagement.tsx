@@ -518,11 +518,8 @@ export default function HospitalManagement() {
                             />
                           </SelectTrigger>
                           <SelectContent className="max-h-64">
-                            {formData.state &&
-                              statesDistricts.states
-                                .find((s) => s.name === formData.state)
-                                ?.districts.map((district, idx) => (
-                                  <SelectItem key={`${district}-${idx}`} value={district}>
+                            {selectedDistricts.map((district) => (
+                                  <SelectItem key={district} value={district}>
                                     {district}
                                   </SelectItem>
                                 ))}
