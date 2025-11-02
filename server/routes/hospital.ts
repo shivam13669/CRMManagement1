@@ -20,7 +20,12 @@ interface CreateHospitalRequest {
   email: string;
   password: string;
   hospital_name: string;
-  address: string;
+  address?: string;
+  address_lane1?: string;
+  address_lane2?: string;
+  state?: string;
+  district?: string;
+  pin_code?: string;
   phone_number?: string;
   hospital_type?: "General" | "Specialty" | "Private" | "Government" | "Other";
   license_number?: string;
