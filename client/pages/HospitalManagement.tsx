@@ -319,21 +319,6 @@ export default function HospitalManagement() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="full_name">Administrator Name *</Label>
-                        <Input
-                          id="full_name"
-                          value={formData.full_name}
-                          onChange={(e) =>
-                            setFormData((p) => ({
-                              ...p,
-                              full_name: e.target.value,
-                            }))
-                          }
-                          placeholder="John Doe"
-                          required
-                        />
-                      </div>
-                      <div>
                         <Label htmlFor="email">Email *</Label>
                         <Input
                           id="email"
