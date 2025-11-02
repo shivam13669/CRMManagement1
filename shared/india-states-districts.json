@@ -381,6 +381,13 @@
       ]
     },
     {
+      "name": "Ladakh",
+      "districts": [
+        "Kargil",
+        "Leh"
+      ]
+    },
+    {
       "name": "Lakshadweep",
       "districts": [
         "Agatti",
