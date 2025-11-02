@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Checkbox } from "../components/ui/checkbox";
+import statesDistricts from "../../shared/india-states-districts.json";
 import {
   Plus,
   MapPin,
@@ -69,12 +70,15 @@ export default function HospitalManagement() {
   const [filterHospitalType, setFilterHospitalType] = useState("all");
 
   const [formData, setFormData] = useState({
-    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
     hospital_name: "",
-    address: "",
+    address_lane1: "",
+    address_lane2: "",
+    state: "",
+    district: "",
+    pin_code: "",
     hospital_type: "General",
     license_number: "",
     number_of_ambulances: "0",
@@ -154,11 +158,12 @@ export default function HospitalManagement() {
     }
 
     if (
-      !formData.full_name ||
       !formData.email ||
       !formData.password ||
       !formData.hospital_name ||
-      !formData.address
+      !formData.address_lane1 ||
+      !formData.state ||
+      !formData.district
     ) {
       toast({
         title: "Please fill all required fields",
@@ -179,9 +184,13 @@ export default function HospitalManagement() {
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
-          full_name: formData.full_name,
+          full_name: formData.hospital_name,
           hospital_name: formData.hospital_name,
-          address: formData.address,
+          address_lane1: formData.address_lane1,
+          address_lane2: formData.address_lane2 || undefined,
+          state: formData.state,
+          district: formData.district,
+          pin_code: formData.pin_code || undefined,
           phone_number: contactNumbers.join(","),
           hospital_type: formData.hospital_type,
           license_number: formData.license_number || undefined,
@@ -215,12 +224,15 @@ export default function HospitalManagement() {
       });
 
       setFormData({
-        full_name: "",
         email: "",
         password: "",
         confirmPassword: "",
         hospital_name: "",
-        address: "",
+        address_lane1: "",
+        address_lane2: "",
+        state: "",
+        district: "",
+        pin_code: "",
         hospital_type: "General",
         license_number: "",
         number_of_ambulances: "0",
@@ -318,24 +330,9 @@ export default function HospitalManagement() {
                   {/* Admin Account Details */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Administrator Account
+                      Login Credentials
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="full_name">Administrator Name *</Label>
-                        <Input
-                          id="full_name"
-                          value={formData.full_name}
-                          onChange={(e) =>
-                            setFormData((p) => ({
-                              ...p,
-                              full_name: e.target.value,
-                            }))
-                          }
-                          placeholder="John Doe"
-                          required
-                        />
-                      </div>
                       <div>
                         <Label htmlFor="email">Email *</Label>
                         <Input
@@ -432,19 +429,104 @@ export default function HospitalManagement() {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="md:col-span-2">
-                        <Label htmlFor="address">Address *</Label>
+                      <div>
+                        <Label htmlFor="address_lane1">Address Lane 1 *</Label>
                         <Input
-                          id="address"
-                          value={formData.address}
+                          id="address_lane1"
+                          value={formData.address_lane1}
                           onChange={(e) =>
                             setFormData((p) => ({
                               ...p,
-                              address: e.target.value,
+                              address_lane1: e.target.value,
                             }))
                           }
-                          placeholder="123 Medical Street, City, State 12345"
+                          placeholder="123 Medical Street"
                           required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address_lane2">Address Lane 2</Label>
+                        <Input
+                          id="address_lane2"
+                          value={formData.address_lane2}
+                          onChange={(e) =>
+                            setFormData((p) => ({
+                              ...p,
+                              address_lane2: e.target.value,
+                            }))
+                          }
+                          placeholder="Near Park, Building 5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="state">State *</Label>
+                        <Select
+                          value={formData.state}
+                          onValueChange={(value) =>
+                            setFormData((p) => ({
+                              ...p,
+                              state: value,
+                              district: "",
+                            }))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select State" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-64">
+                            {statesDistricts.states.map((state) => (
+                              <SelectItem key={state.name} value={state.name}>
+                                {state.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="district">District *</Label>
+                        <Select
+                          value={formData.district}
+                          onValueChange={(value) =>
+                            setFormData((p) => ({
+                              ...p,
+                              district: value,
+                            }))
+                          }
+                          disabled={!formData.state}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                formData.state
+                                  ? "Select District"
+                                  : "Select State first"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-64">
+                            {formData.state &&
+                              statesDistricts.states
+                                .find((s) => s.name === formData.state)
+                                ?.districts.map((district) => (
+                                  <SelectItem key={district} value={district}>
+                                    {district}
+                                  </SelectItem>
+                                ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="pin_code">PIN Code</Label>
+                        <Input
+                          id="pin_code"
+                          value={formData.pin_code}
+                          onChange={(e) =>
+                            setFormData((p) => ({
+                              ...p,
+                              pin_code: e.target.value,
+                            }))
+                          }
+                          placeholder="110001"
                         />
                       </div>
 

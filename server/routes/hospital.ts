@@ -20,7 +20,12 @@ interface CreateHospitalRequest {
   email: string;
   password: string;
   hospital_name: string;
-  address: string;
+  address?: string;
+  address_lane1?: string;
+  address_lane2?: string;
+  state?: string;
+  district?: string;
+  pin_code?: string;
   phone_number?: string;
   hospital_type?: "General" | "Specialty" | "Private" | "Government" | "Other";
   license_number?: string;
@@ -53,6 +58,11 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
       password,
       hospital_name,
       address,
+      address_lane1,
+      address_lane2,
+      state,
+      district,
+      pin_code,
       phone_number,
       hospital_type,
       license_number,
@@ -65,10 +75,18 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     }: CreateHospitalRequest = req.body;
 
     // Validate required fields
-    if (!email || !password || !hospital_name || !address || !full_name) {
+    if (
+      !email ||
+      !password ||
+      !hospital_name ||
+      !full_name ||
+      !address_lane1 ||
+      !state ||
+      !district
+    ) {
       return res.status(400).json({
         error:
-          "Missing required fields: email, password, hospital_name, address, full_name",
+          "Missing required fields: email, password, hospital_name, address_lane1, state, district, full_name",
       });
     }
 
@@ -119,7 +137,13 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     const hospital: Hospital = {
       user_id: userId,
       hospital_name,
-      address,
+      address:
+        `${address_lane1}${address_lane2 ? ", " + address_lane2 : ""}, ${district}, ${state} ${pin_code || ""}`.trim(),
+      address_lane1,
+      address_lane2,
+      state,
+      district,
+      pin_code,
       phone_number,
       hospital_type,
       license_number,
