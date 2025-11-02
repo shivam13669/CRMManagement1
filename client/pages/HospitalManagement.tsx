@@ -207,12 +207,18 @@ export default function HospitalManagement() {
         }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        data = { message: text };
+      }
 
       if (!response.ok) {
         toast({
           title: "Error",
-          description: data.error || "Failed to create hospital",
+          description: data.error || data.message || "Failed to create hospital",
           variant: "destructive",
         });
         return;
