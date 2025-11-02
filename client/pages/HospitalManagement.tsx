@@ -429,19 +429,98 @@ export default function HospitalManagement() {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="md:col-span-2">
-                        <Label htmlFor="address">Address *</Label>
+                      <div>
+                        <Label htmlFor="address_lane1">Address Lane 1 *</Label>
                         <Input
-                          id="address"
-                          value={formData.address}
+                          id="address_lane1"
+                          value={formData.address_lane1}
                           onChange={(e) =>
                             setFormData((p) => ({
                               ...p,
-                              address: e.target.value,
+                              address_lane1: e.target.value,
                             }))
                           }
-                          placeholder="123 Medical Street, City, State 12345"
+                          placeholder="123 Medical Street"
                           required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address_lane2">Address Lane 2</Label>
+                        <Input
+                          id="address_lane2"
+                          value={formData.address_lane2}
+                          onChange={(e) =>
+                            setFormData((p) => ({
+                              ...p,
+                              address_lane2: e.target.value,
+                            }))
+                          }
+                          placeholder="Near Park, Building 5"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="state">State *</Label>
+                        <Select
+                          value={formData.state}
+                          onValueChange={(value) =>
+                            setFormData((p) => ({
+                              ...p,
+                              state: value,
+                              district: "",
+                            }))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select State" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-64">
+                            {statesDistricts.states.map((state) => (
+                              <SelectItem key={state.name} value={state.name}>
+                                {state.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="district">District *</Label>
+                        <Select
+                          value={formData.district}
+                          onValueChange={(value) =>
+                            setFormData((p) => ({
+                              ...p,
+                              district: value,
+                            }))
+                          }
+                          disabled={!formData.state}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={formData.state ? "Select District" : "Select State first"} />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-64">
+                            {formData.state &&
+                              statesDistricts.states
+                                .find((s) => s.name === formData.state)
+                                ?.districts.map((district) => (
+                                  <SelectItem key={district} value={district}>
+                                    {district}
+                                  </SelectItem>
+                                ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="pin_code">PIN Code</Label>
+                        <Input
+                          id="pin_code"
+                          value={formData.pin_code}
+                          onChange={(e) =>
+                            setFormData((p) => ({
+                              ...p,
+                              pin_code: e.target.value,
+                            }))
+                          }
+                          placeholder="110001"
                         />
                       </div>
 
