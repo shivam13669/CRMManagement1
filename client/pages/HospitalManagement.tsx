@@ -69,7 +69,6 @@ export default function HospitalManagement() {
   const [filterHospitalType, setFilterHospitalType] = useState("all");
 
   const [formData, setFormData] = useState({
-    full_name: "",
     email: "",
     password: "",
     confirmPassword: "",
