@@ -213,7 +213,6 @@ export default function HospitalManagement() {
       });
 
       setFormData({
-        full_name: "",
         email: "",
         password: "",
         confirmPassword: "",
