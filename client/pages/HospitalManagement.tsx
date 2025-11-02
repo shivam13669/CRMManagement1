@@ -207,12 +207,19 @@ export default function HospitalManagement() {
         }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        data = { message: text };
+      }
 
       if (!response.ok) {
         toast({
           title: "Error",
-          description: data.error || "Failed to create hospital",
+          description:
+            data.error || data.message || "Failed to create hospital",
           variant: "destructive",
         });
         return;
@@ -285,6 +292,23 @@ export default function HospitalManagement() {
         .filter(Boolean),
     }));
   }, [filteredHospitals]);
+
+  // Sorted states list and deduplicated, sorted districts for selected state
+  const sortedStates = useMemo(() => {
+    return [...statesDistricts.states]
+      .map((s) => ({
+        name: s.name,
+        districts: Array.isArray(s.districts) ? [...s.districts] : [],
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+
+  const selectedDistricts = useMemo(() => {
+    if (!formData.state) return [] as string[];
+    const stateObj = sortedStates.find((s) => s.name === formData.state);
+    const districts = (stateObj?.districts || []).filter(Boolean) as string[];
+    return Array.from(new Set(districts)).sort((a, b) => a.localeCompare(b));
+  }, [formData.state, sortedStates]);
 
   const hospitalTypes = useMemo(() => {
     return Array.from(
@@ -474,7 +498,7 @@ export default function HospitalManagement() {
                             <SelectValue placeholder="Select State" />
                           </SelectTrigger>
                           <SelectContent className="max-h-64">
-                            {statesDistricts.states.map((state) => (
+                            {sortedStates.map((state) => (
                               <SelectItem key={state.name} value={state.name}>
                                 {state.name}
                               </SelectItem>
@@ -504,14 +528,11 @@ export default function HospitalManagement() {
                             />
                           </SelectTrigger>
                           <SelectContent className="max-h-64">
-                            {formData.state &&
-                              statesDistricts.states
-                                .find((s) => s.name === formData.state)
-                                ?.districts.map((district) => (
-                                  <SelectItem key={district} value={district}>
-                                    {district}
-                                  </SelectItem>
-                                ))}
+                            {selectedDistricts.map((district) => (
+                              <SelectItem key={district} value={district}>
+                                {district}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
