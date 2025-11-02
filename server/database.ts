@@ -407,6 +407,36 @@ async function runMigrations(): Promise<void> {
       console.log("⚠️ Rating column migration skipped:", error.message);
     }
 
+    // Migration 3: Add address breakdown columns to hospitals table
+    try {
+      const hospitalTableInfo = db.exec("PRAGMA table_info(hospitals)");
+      const hasAddressLane1 = hospitalTableInfo[0]?.values.some(
+        (row) => row[1] === "address_lane1",
+      );
+
+      if (!hasAddressLane1) {
+        console.log("📝 Adding address fields to hospitals table...");
+        db.run(
+          "ALTER TABLE hospitals ADD COLUMN address_lane1 TEXT",
+        );
+        db.run(
+          "ALTER TABLE hospitals ADD COLUMN address_lane2 TEXT",
+        );
+        db.run(
+          "ALTER TABLE hospitals ADD COLUMN state TEXT",
+        );
+        db.run(
+          "ALTER TABLE hospitals ADD COLUMN district TEXT",
+        );
+        db.run(
+          "ALTER TABLE hospitals ADD COLUMN pin_code TEXT",
+        );
+        console.log("✅ Address fields added successfully");
+      }
+    } catch (error) {
+      console.log("⚠️ Address fields migration skipped:", error.message);
+    }
+
     console.log("��� All migrations completed");
   } catch (error) {
     console.error("❌ Error running migrations:", error);
