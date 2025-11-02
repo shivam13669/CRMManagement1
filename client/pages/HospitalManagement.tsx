@@ -177,7 +177,7 @@ export default function HospitalManagement() {
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
-          full_name: formData.full_name,
+          full_name: formData.hospital_name,
           hospital_name: formData.hospital_name,
           address: formData.address,
           phone_number: contactNumbers.join(","),
@@ -380,7 +380,7 @@ export default function HospitalManagement() {
                               confirmPassword: e.target.value,
                             }))
                           }
-                          placeholder="•••••••���"
+                          placeholder="••••••••"
                           required
                         />
                       </div>
