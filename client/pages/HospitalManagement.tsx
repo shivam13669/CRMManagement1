@@ -494,7 +494,7 @@ export default function HospitalManagement() {
                             <SelectValue placeholder="Select State" />
                           </SelectTrigger>
                           <SelectContent className="max-h-64">
-                            {statesDistricts.states.map((state) => (
+                            {sortedStates.map((state) => (
                               <SelectItem key={state.name} value={state.name}>
                                 {state.name}
                               </SelectItem>
