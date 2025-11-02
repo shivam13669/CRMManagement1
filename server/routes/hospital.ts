@@ -7,6 +7,7 @@ import {
   getAllHospitals,
   updateHospital,
   getUserByEmail,
+  getUserByUsername,
   verifyPassword,
   User,
   Hospital,
@@ -16,7 +17,6 @@ const JWT_SECRET =
   process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
 interface CreateHospitalRequest {
-  username: string;
   email: string;
   password: string;
   hospital_name: string;
@@ -49,7 +49,6 @@ interface UpdateHospitalRequest {
 export const handleCreateHospital: RequestHandler = async (req, res) => {
   try {
     const {
-      username,
       email,
       password,
       hospital_name,
@@ -66,9 +65,9 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     }: CreateHospitalRequest = req.body;
 
     // Validate required fields
-    if (!username || !email || !password || !hospital_name || !address || !full_name) {
+    if (!email || !password || !hospital_name || !address || !full_name) {
       return res.status(400).json({
-        error: "Missing required fields: username, email, password, hospital_name, address, full_name",
+        error: "Missing required fields: email, password, hospital_name, address, full_name",
       });
     }
 
@@ -87,9 +86,19 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
       }
     }
 
+    // Auto-generate unique username from email/hospital name
+    const base = (email?.split("@")[0] || hospital_name || "hospital").toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 20) || "hospital";
+    let generated = base;
+    let suffix = 1;
+    while (getUserByUsername(generated)) {
+      generated = `${base}${suffix}`;
+      suffix += 1;
+      if (suffix > 9999) break;
+    }
+
     // Create user account for hospital
     const user: User = {
-      username,
+      username: generated,
       email,
       password,
       role: "hospital",
