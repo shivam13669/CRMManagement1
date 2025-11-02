@@ -218,7 +218,8 @@ export default function HospitalManagement() {
       if (!response.ok) {
         toast({
           title: "Error",
-          description: data.error || data.message || "Failed to create hospital",
+          description:
+            data.error || data.message || "Failed to create hospital",
           variant: "destructive",
         });
         return;
@@ -295,7 +296,10 @@ export default function HospitalManagement() {
   // Sorted states list and deduplicated, sorted districts for selected state
   const sortedStates = useMemo(() => {
     return [...statesDistricts.states]
-      .map((s) => ({ name: s.name, districts: Array.isArray(s.districts) ? [...s.districts] : [] }))
+      .map((s) => ({
+        name: s.name,
+        districts: Array.isArray(s.districts) ? [...s.districts] : [],
+      }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
@@ -525,10 +529,10 @@ export default function HospitalManagement() {
                           </SelectTrigger>
                           <SelectContent className="max-h-64">
                             {selectedDistricts.map((district) => (
-                                  <SelectItem key={district} value={district}>
-                                    {district}
-                                  </SelectItem>
-                                ))}
+                              <SelectItem key={district} value={district}>
+                                {district}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>

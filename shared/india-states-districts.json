@@ -382,10 +382,7 @@
     },
     {
       "name": "Ladakh",
-      "districts": [
-        "Kargil",
-        "Leh"
-      ]
+      "districts": ["Kargil", "Leh"]
     },
     {
       "name": "Lakshadweep",
@@ -602,12 +599,7 @@
     },
     {
       "name": "Puducherry",
-      "districts": [
-        "Karaikal",
-        "Mahe",
-        "Pondicherry",
-        "Yanam"
-      ]
+      "districts": ["Karaikal", "Mahe", "Pondicherry", "Yanam"]
     },
     {
       "name": "Punjab",

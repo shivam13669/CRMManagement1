@@ -1,22 +1,25 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const filePath = path.join(__dirname, '..', 'shared', 'india-states-districts.json');
+const filePath = path.join(
+  __dirname,
+  "..",
+  "shared",
+  "india-states-districts.json",
+);
 
 function clean() {
-  const raw = fs.readFileSync(filePath, 'utf8');
+  const raw = fs.readFileSync(filePath, "utf8");
   const obj = JSON.parse(raw);
   if (!obj.states || !Array.isArray(obj.states)) {
-    console.error('Invalid file format');
+    console.error("Invalid file format");
     process.exit(1);
   }
 
   const cleaned = obj.states.map((s) => {
-    const name = (s.name || '').trim();
+    const name = (s.name || "").trim();
     const districts = Array.isArray(s.districts)
-      ? s.districts
-          .map((d) => (d || '').trim())
-          .filter(Boolean)
+      ? s.districts.map((d) => (d || "").trim()).filter(Boolean)
       : [];
 
     // dedupe (case-insensitive) preserving normalized casing
@@ -46,7 +49,9 @@ function clean() {
         const k = d.toLowerCase();
         if (!seen.has(k)) seen.set(k, d);
       }
-      existing.districts = Array.from(seen.values()).sort((a, b) => a.localeCompare(b));
+      existing.districts = Array.from(seen.values()).sort((a, b) =>
+        a.localeCompare(b),
+      );
       map.set(key, existing);
     }
   }
@@ -57,8 +62,8 @@ function clean() {
   merged.sort((a, b) => a.name.localeCompare(b.name));
 
   const out = { states: merged };
-  fs.writeFileSync(filePath, JSON.stringify(out, null, 2), 'utf8');
-  console.log('Cleaned and wrote', filePath);
+  fs.writeFileSync(filePath, JSON.stringify(out, null, 2), "utf8");
+  console.log("Cleaned and wrote", filePath);
 }
 
 clean();
