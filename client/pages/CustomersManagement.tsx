@@ -388,9 +388,7 @@ export default function CustomersManagement() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">
-                            All Blood Groups
-                          </SelectItem>
+                          <SelectItem value="all">All Blood Groups</SelectItem>
                           {bloodGroupsInCustomers.map((bg) => (
                             <SelectItem key={bg} value={bg || "unknown"}>
                               {bg || "Unknown"}
@@ -417,12 +415,8 @@ export default function CustomersManagement() {
                         <SelectContent>
                           <SelectItem value="all">All Ages</SelectItem>
                           <SelectItem value="0-18">0-18 years</SelectItem>
-                          <SelectItem value="19-30">
-                            19-30 years
-                          </SelectItem>
-                          <SelectItem value="31-50">
-                            31-50 years
-                          </SelectItem>
+                          <SelectItem value="19-30">19-30 years</SelectItem>
+                          <SelectItem value="31-50">31-50 years</SelectItem>
                           <SelectItem value="51+">51+ years</SelectItem>
                         </SelectContent>
                       </Select>
@@ -443,15 +437,9 @@ export default function CustomersManagement() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">
-                            All Customers
-                          </SelectItem>
-                          <SelectItem value="yes">
-                            Has Conditions
-                          </SelectItem>
-                          <SelectItem value="no">
-                            No Conditions
-                          </SelectItem>
+                          <SelectItem value="all">All Customers</SelectItem>
+                          <SelectItem value="yes">Has Conditions</SelectItem>
+                          <SelectItem value="no">No Conditions</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
