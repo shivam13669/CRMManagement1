@@ -129,7 +129,12 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     const hospital: Hospital = {
       user_id: userId,
       hospital_name,
-      address,
+      address: `${address_lane1}${address_lane2 ? ", " + address_lane2 : ""}, ${district}, ${state} ${pin_code || ""}`.trim(),
+      address_lane1,
+      address_lane2,
+      state,
+      district,
+      pin_code,
       phone_number,
       hospital_type,
       license_number,
