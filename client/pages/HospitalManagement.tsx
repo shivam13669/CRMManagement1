@@ -26,7 +26,20 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Checkbox } from "../components/ui/checkbox";
-import { Plus, MapPin, Phone, AlertCircle, Trash2, Search, Filter, Download, Building2, TrendingUp, Calendar, Ambulance } from "lucide-react";
+import {
+  Plus,
+  MapPin,
+  Phone,
+  AlertCircle,
+  Trash2,
+  Search,
+  Filter,
+  Download,
+  Building2,
+  TrendingUp,
+  Calendar,
+  Ambulance,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface HospitalItem {
@@ -106,13 +119,19 @@ export default function HospitalManagement() {
 
   const stats = {
     total: hospitals.length,
-    active: hospitals.filter(h => h.status === "active").length,
-    newThisMonth: hospitals.filter(h => {
+    active: hospitals.filter((h) => h.status === "active").length,
+    newThisMonth: hospitals.filter((h) => {
       const created = new Date(h.created_at || "");
       const now = new Date();
-      return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
+      return (
+        created.getMonth() === now.getMonth() &&
+        created.getFullYear() === now.getFullYear()
+      );
     }).length,
-    totalAmbulances: hospitals.reduce((sum, h) => sum + (h.number_of_ambulances || 0), 0)
+    totalAmbulances: hospitals.reduce(
+      (sum, h) => sum + (h.number_of_ambulances || 0),
+      0,
+    ),
   };
 
   const addContactNumber = () => {
@@ -230,12 +249,16 @@ export default function HospitalManagement() {
   const filteredHospitals = useMemo(() => {
     return hospitals.filter((hospital) => {
       const matchesSearch =
-        hospital.hospital_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        hospital.hospital_name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         hospital.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
         hospital.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (hospital.phone_number && hospital.phone_number.includes(searchTerm));
 
-      const matchesType = filterHospitalType === "all" || hospital.hospital_type === filterHospitalType;
+      const matchesType =
+        filterHospitalType === "all" ||
+        hospital.hospital_type === filterHospitalType;
 
       return matchesSearch && matchesType;
     });
@@ -252,7 +275,9 @@ export default function HospitalManagement() {
   }, [filteredHospitals]);
 
   const hospitalTypes = useMemo(() => {
-    return Array.from(new Set(hospitals.map(h => h.hospital_type).filter(Boolean)));
+    return Array.from(
+      new Set(hospitals.map((h) => h.hospital_type).filter(Boolean)),
+    );
   }, [hospitals]);
 
   return (
@@ -284,8 +309,8 @@ export default function HospitalManagement() {
                 <DialogHeader>
                   <DialogTitle>Add New Hospital</DialogTitle>
                   <DialogDescription>
-                    Admin-only creation. The hospital will log in using the email
-                    and password you set here.
+                    Admin-only creation. The hospital will log in using the
+                    email and password you set here.
                   </DialogDescription>
                 </DialogHeader>
 
@@ -318,7 +343,10 @@ export default function HospitalManagement() {
                           type="email"
                           value={formData.email}
                           onChange={(e) =>
-                            setFormData((p) => ({ ...p, email: e.target.value }))
+                            setFormData((p) => ({
+                              ...p,
+                              email: e.target.value,
+                            }))
                           }
                           placeholder="admin@hospital.com"
                           required
@@ -397,7 +425,9 @@ export default function HospitalManagement() {
                             <SelectItem value="General">General</SelectItem>
                             <SelectItem value="Specialty">Specialty</SelectItem>
                             <SelectItem value="Private">Private</SelectItem>
-                            <SelectItem value="Government">Government</SelectItem>
+                            <SelectItem value="Government">
+                              Government
+                            </SelectItem>
                             <SelectItem value="Other">Other</SelectItem>
                           </SelectContent>
                         </Select>
@@ -625,8 +655,12 @@ export default function HospitalManagement() {
                   <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total}</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Total Hospitals</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {stats.total}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Total Hospitals
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -639,8 +673,12 @@ export default function HospitalManagement() {
                   <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.active}</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Active Hospitals</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {stats.active}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Active Hospitals
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -653,8 +691,12 @@ export default function HospitalManagement() {
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900">+{stats.newThisMonth}</div>
-                  <div className="text-xs sm:text-sm text-gray-600">New This Month</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    +{stats.newThisMonth}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    New This Month
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -667,8 +709,12 @@ export default function HospitalManagement() {
                   <Ambulance className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.totalAmbulances}</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Total Ambulances</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {stats.totalAmbulances}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-600">
+                    Total Ambulances
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -691,7 +737,10 @@ export default function HospitalManagement() {
                 </div>
               </div>
               <div className="w-full sm:w-64">
-                <Select value={filterHospitalType} onValueChange={setFilterHospitalType}>
+                <Select
+                  value={filterHospitalType}
+                  onValueChange={setFilterHospitalType}
+                >
                   <SelectTrigger>
                     <Filter className="w-4 h-4 mr-2" />
                     <SelectValue placeholder="Filter by type" />
