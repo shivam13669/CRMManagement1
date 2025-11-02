@@ -7,6 +7,7 @@ import {
   getAllHospitals,
   updateHospital,
   getUserByEmail,
+  getUserByUsername,
   verifyPassword,
   User,
   Hospital,
@@ -16,7 +17,6 @@ const JWT_SECRET =
   process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
 interface CreateHospitalRequest {
-  username: string;
   email: string;
   password: string;
   hospital_name: string;
@@ -49,7 +49,6 @@ interface UpdateHospitalRequest {
 export const handleCreateHospital: RequestHandler = async (req, res) => {
   try {
     const {
-      username,
       email,
       password,
       hospital_name,
@@ -66,9 +65,10 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     }: CreateHospitalRequest = req.body;
 
     // Validate required fields
-    if (!username || !email || !password || !hospital_name || !address || !full_name) {
+    if (!email || !password || !hospital_name || !address || !full_name) {
       return res.status(400).json({
-        error: "Missing required fields: username, email, password, hospital_name, address, full_name",
+        error:
+          "Missing required fields: email, password, hospital_name, address, full_name",
       });
     }
 
@@ -81,15 +81,31 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     // Check if license number already exists if provided
     if (license_number) {
       const allHospitals = getAllHospitals();
-      const licenseExists = allHospitals.some(h => h.license_number === license_number);
+      const licenseExists = allHospitals.some(
+        (h) => h.license_number === license_number,
+      );
       if (licenseExists) {
         return res.status(409).json({ error: "License number already in use" });
       }
     }
 
+    // Auto-generate unique username from email/hospital name
+    const base =
+      (email?.split("@")[0] || hospital_name || "hospital")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "")
+        .slice(0, 20) || "hospital";
+    let generated = base;
+    let suffix = 1;
+    while (getUserByUsername(generated)) {
+      generated = `${base}${suffix}`;
+      suffix += 1;
+      if (suffix > 9999) break;
+    }
+
     // Create user account for hospital
     const user: User = {
-      username,
+      username: generated,
       email,
       password,
       role: "hospital",
@@ -121,7 +137,7 @@ export const handleCreateHospital: RequestHandler = async (req, res) => {
     const token = jwt.sign(
       { userId, email, role: "hospital", full_name, hospitalId },
       JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "24h" },
     );
 
     res.status(201).json({
@@ -158,7 +174,9 @@ export const handleHospitalLogin: RequestHandler = async (req, res) => {
 
     // Check if user is a hospital
     if (user.role !== "hospital") {
-      return res.status(401).json({ error: "This account is not a hospital account" });
+      return res
+        .status(401)
+        .json({ error: "This account is not a hospital account" });
     }
 
     // Verify password
@@ -191,7 +209,7 @@ export const handleHospitalLogin: RequestHandler = async (req, res) => {
         hospitalId: hospital.id,
       },
       JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "24h" },
     );
 
     res.json({
@@ -259,7 +277,9 @@ export const handleUpdateHospital: RequestHandler = async (req, res) => {
 
     const success = updateHospital(userId, updates as any);
     if (!success) {
-      return res.status(400).json({ error: "No updates provided or hospital not found" });
+      return res
+        .status(400)
+        .json({ error: "No updates provided or hospital not found" });
     }
 
     const hospital = getHospitalByUserId(userId);

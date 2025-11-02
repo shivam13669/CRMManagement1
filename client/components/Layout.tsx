@@ -18,6 +18,7 @@ import {
   UserCheck,
   Shield,
   MessageSquare,
+  Building2,
 } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -29,6 +30,7 @@ const sidebarItems = [
   { icon: Activity, label: "Dashboard", path: "/admin-dashboard" },
   { icon: Users, label: "Customers", path: "/customers" },
   { icon: Users, label: "Doctors", path: "/doctors" },
+  { icon: Building2, label: "Hospitals", path: "/hospital-management" },
   { icon: Users, label: "Staff", path: "/staff" },
   { icon: Calendar, label: "Appointments", path: "/appointments" },
   {
