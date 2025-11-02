@@ -161,7 +161,9 @@ export default function HospitalManagement() {
       !formData.email ||
       !formData.password ||
       !formData.hospital_name ||
-      !formData.address
+      !formData.address_lane1 ||
+      !formData.state ||
+      !formData.district
     ) {
       toast({
         title: "Please fill all required fields",
