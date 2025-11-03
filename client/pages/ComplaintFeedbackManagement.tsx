@@ -58,16 +58,22 @@ export default function ComplaintFeedbackManagement() {
         return;
       }
 
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch (e) {
+        console.error('❌ Failed to parse response:', e);
+        data = { feedback: [] };
+      }
+
       if (response.ok) {
-        const data = await response.json();
         console.log('🔍 Complaint feedback data received:', data);
         console.log('📊 Feedback array:', data.feedback);
         console.log('📊 Feedback count:', data.feedback?.length);
         setFeedback(data.feedback);
       } else {
         console.error('❌ Failed to fetch complaint feedback:', response.status, response.statusText);
-        const errorText = await response.text();
-        console.error('❌ Error details:', errorText);
+        console.error('❌ Error details:', data.error || data.message || 'Unknown error');
       }
     } catch (error) {
       console.error('❌ Error fetching complaint feedback:', error);
