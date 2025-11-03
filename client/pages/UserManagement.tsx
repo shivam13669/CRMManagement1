@@ -307,10 +307,10 @@ export default function UserManagement() {
                 <User className="h-8 w-8 text-green-500" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
-                    Total Patients
+                    Total Customers
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {users.filter((u) => u.role === "patient").length}
+                    {users.filter((u) => u.role === "customer").length}
                   </p>
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function UserManagement() {
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
                   <SelectItem value="doctor">Doctors</SelectItem>
-                  <SelectItem value="patient">Patients</SelectItem>
+                  <SelectItem value="customer">Customers</SelectItem>
                   <SelectItem value="staff">Staff</SelectItem>
                 </SelectContent>
               </Select>
