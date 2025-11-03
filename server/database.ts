@@ -979,7 +979,7 @@ export async function createPendingRegistration(
 
     saveDatabase();
     console.log(
-      `✅ Pending registration created: ${registration.email} - ID: ${pendingId}`,
+      `��� Pending registration created: ${registration.email} - ID: ${pendingId}`,
     );
 
     return pendingId as number;
@@ -1525,14 +1525,11 @@ function parseAddressForStateDistrict(address: string): {
 } {
   try {
     // Load states and districts data
-    const statesDistrictsPath = require("path").join(
+    const statesDistrictsPath = join(
       process.cwd(),
       "shared/india-states-districts.json",
     );
-    const statesDistrictsData = require("fs").readFileSync(
-      statesDistrictsPath,
-      "utf-8",
-    );
+    const statesDistrictsData = readFileSync(statesDistrictsPath, "utf-8");
     const statesDistricts = JSON.parse(statesDistrictsData);
 
     // Build lookup maps
