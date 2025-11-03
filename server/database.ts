@@ -1191,7 +1191,10 @@ export async function suspendUser(userId: number): Promise<boolean> {
         [userId],
       );
     } catch (e) {
-      console.warn(`⚠️ Failed to update hospital status for user ${userId}:`, e);
+      console.warn(
+        `⚠️ Failed to update hospital status for user ${userId}:`,
+        e,
+      );
     }
 
     console.log(`✅ User ${userId} suspended successfully`);
@@ -1228,7 +1231,10 @@ export async function reactivateUser(userId: number): Promise<boolean> {
         [userId],
       );
     } catch (e) {
-      console.warn(`⚠️ Failed to update hospital status for user ${userId}:`, e);
+      console.warn(
+        `⚠️ Failed to update hospital status for user ${userId}:`,
+        e,
+      );
     }
 
     console.log(`✅ User ${userId} reactivated successfully`);
