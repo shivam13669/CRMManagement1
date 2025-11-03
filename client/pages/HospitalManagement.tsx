@@ -903,7 +903,7 @@ export default function HospitalManagement() {
         <Card>
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
+              <div className="flex-1 text-[0px]">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
@@ -989,7 +989,7 @@ export default function HospitalManagement() {
                 >
                   <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                      <div className="flex-1">
+                      <div className="flex-1 text-[0px]">
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">
                             {hospital.hospital_name}
