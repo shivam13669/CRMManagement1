@@ -40,6 +40,7 @@ import {
   TrendingUp,
   Calendar,
   Ambulance,
+  Edit3,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -64,6 +65,9 @@ interface HospitalItem {
 export default function HospitalManagement() {
   const { toast } = useToast();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingHospitalId, setEditingHospitalId] = useState<number | null>(
+    null,
+  );
   const [hospitals, setHospitals] = useState<HospitalItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,6 +100,54 @@ export default function HospitalManagement() {
   useEffect(() => {
     fetchHospitals();
   }, []);
+
+  // Cleanup stray text nodes (some rendering environments can inject orphaned text nodes like "0")
+  useEffect(() => {
+    const cleanup = () => {
+      try {
+        const container = document.getElementById("hospital-list");
+        if (!container) return;
+        const walker = document.createTreeWalker(
+          container,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: (node) => {
+              if (node.nodeValue && node.nodeValue.trim() === "0") {
+                const parent = node.parentElement;
+                // keep if value rendered inside expected value elements
+                if (
+                  parent &&
+                  parent.classList &&
+                  (parent.classList.contains("font-semibold") ||
+                    parent.classList.contains("px-2"))
+                ) {
+                  return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+              }
+              return NodeFilter.FILTER_REJECT;
+            },
+          },
+        );
+        const nodes: Text[] = [];
+        let n: Text | null = walker.nextNode() as Text | null;
+        while (n) {
+          nodes.push(n);
+          n = walker.nextNode() as Text | null;
+        }
+        for (const t of nodes) {
+          if (t.parentNode) t.parentNode.removeChild(t);
+        }
+      } catch (e) {
+        // silent
+      }
+    };
+
+    // run once after mount and after hospitals change
+    cleanup();
+    const id = setInterval(cleanup, 500);
+    return () => clearInterval(id);
+  }, [hospitals]);
 
   const fetchHospitals = async () => {
     try {
@@ -152,6 +204,55 @@ export default function HospitalManagement() {
     setContactNumbers((prev) => prev.filter((n) => n !== num));
   };
 
+  const openEdit = (hospital: any) => {
+    setEditingHospitalId(hospital.id);
+    setFormData((p) => ({
+      ...p,
+      email: hospital.email || "",
+      password: "",
+      confirmPassword: "",
+      hospital_name: hospital.hospital_name || "",
+      address_lane1: hospital.address || "",
+      address_lane2: "",
+      state: "",
+      district: "",
+      pin_code: "",
+      hospital_type: hospital.hospital_type || "General",
+      license_number: hospital.license_number || "",
+      number_of_ambulances: String(hospital.number_of_ambulances || 0),
+      number_of_beds: String(hospital.number_of_beds || 0),
+      departments: hospital.departments || "",
+      location_enabled: Boolean(hospital.google_map_enabled),
+      location_link: hospital.google_map_link || "",
+    }));
+
+    const phones = (hospital.phone_number || hospital.phoneList || "")
+      .toString()
+      .split(",")
+      .map((p: string) => p.trim())
+      .filter(Boolean);
+    setContactNumbers(phones);
+    if (phones.length > 0) {
+      const first = phones[0];
+      const match = first.match(/^\+(\d{1,3})/);
+      setCountryCode(match ? `+${match[1]}` : "+91");
+    }
+
+    if (hospital.departments) {
+      setDepartmentItems(
+        hospital.departments
+          .toString()
+          .split(",")
+          .map((d: string) => d.trim())
+          .filter(Boolean),
+      );
+    } else {
+      setDepartmentItems([]);
+    }
+
+    setShowCreateForm(true);
+  };
+
   const addDepartment = () => {
     const parts = departmentInput
       .split(",")
@@ -178,29 +279,95 @@ export default function HospitalManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      toast({ title: "Passwords do not match", variant: "destructive" });
-      return;
-    }
 
-    if (
-      !formData.email ||
-      !formData.password ||
-      !formData.hospital_name ||
-      !formData.address_lane1 ||
-      !formData.state ||
-      !formData.district
-    ) {
-      toast({
-        title: "Please fill all required fields",
-        variant: "destructive",
-      });
-      return;
+    // If editing, password is optional
+    if (!editingHospitalId) {
+      if (formData.password !== formData.confirmPassword) {
+        toast({ title: "Passwords do not match", variant: "destructive" });
+        return;
+      }
+
+      if (
+        !formData.email ||
+        !formData.password ||
+        !formData.hospital_name ||
+        !formData.address_lane1 ||
+        !formData.state ||
+        !formData.district
+      ) {
+        toast({
+          title: "Please fill all required fields",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      if (!formData.hospital_name || !formData.address_lane1) {
+        toast({ title: "Please fill required fields", variant: "destructive" });
+        return;
+      }
     }
 
     try {
       setLoading(true);
       const token = localStorage.getItem("authToken");
+
+      if (editingHospitalId) {
+        // Admin update
+        const address =
+          `${formData.address_lane1} ${formData.address_lane2 || ""} ${formData.state || ""} ${formData.district || ""} ${formData.pin_code || ""}`.trim();
+        const response = await fetch(
+          `/api/admin/hospitals/${editingHospitalId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              hospital_name: formData.hospital_name,
+              address,
+              phone_number: contactNumbers.join(","),
+              hospital_type: formData.hospital_type,
+              license_number: formData.license_number || undefined,
+              number_of_ambulances: parseInt(
+                formData.number_of_ambulances || "0",
+                10,
+              ),
+              number_of_beds: parseInt(formData.number_of_beds || "0", 10),
+              departments: departmentItems.length
+                ? departmentItems.join(",")
+                : undefined,
+              google_map_enabled: formData.location_enabled,
+              google_map_link: formData.location_enabled
+                ? formData.location_link
+                : undefined,
+            }),
+          },
+        );
+
+        const data = await response.json();
+        if (!response.ok) {
+          toast({
+            title: "Error",
+            description:
+              data.error || data.message || "Failed to update hospital",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        toast({
+          title: "Hospital updated",
+          description: `\"${formData.hospital_name}\" updated successfully!`,
+        });
+        setEditingHospitalId(null);
+        setShowCreateForm(false);
+        fetchHospitals();
+        return;
+      }
+
+      // Create new hospital
       const response = await fetch("/api/admin/hospitals/create", {
         method: "POST",
         headers: {
@@ -387,16 +554,52 @@ export default function HospitalManagement() {
               <Download className="w-4 h-4 mr-2" />
               Export List
             </Button>
-            <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
+            <Dialog
+              open={showCreateForm}
+              onOpenChange={(open) => {
+                setShowCreateForm(open);
+                if (!open) setEditingHospitalId(null);
+              }}
+            >
               <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
+                <Button
+                  className="w-full sm:w-auto"
+                  onClick={() => {
+                    setEditingHospitalId(null);
+                    setFormData({
+                      email: "",
+                      password: "",
+                      confirmPassword: "",
+                      hospital_name: "",
+                      address_lane1: "",
+                      address_lane2: "",
+                      state: "",
+                      district: "",
+                      pin_code: "",
+                      hospital_type: "General",
+                      license_number: "",
+                      number_of_ambulances: "0",
+                      number_of_beds: "0",
+                      departments: "",
+                      location_enabled: false,
+                      location_link: "",
+                    });
+                    setCountryCode("+91");
+                    setContactNumbers([]);
+                    setContactNumberInput("");
+                    setDepartmentItems([]);
+                    setDepartmentInput("");
+                  }}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Hospital
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Add New Hospital</DialogTitle>
+                  <DialogTitle>
+                    {editingHospitalId ? "Edit Hospital" : "Add New Hospital"}
+                  </DialogTitle>
                   <DialogDescription>
                     Admin-only creation. The hospital will log in using the
                     email and password you set here.
@@ -700,7 +903,7 @@ export default function HospitalManagement() {
                       </div>
                       <div>
                         <Label htmlFor="license_number">
-                          License/registration number
+                          License/Reg. Number
                         </Label>
                         <Input
                           id="license_number"
@@ -815,7 +1018,13 @@ export default function HospitalManagement() {
                       disabled={loading}
                       className="min-w-[120px]"
                     >
-                      {loading ? "Creating..." : "Create Hospital"}
+                      {editingHospitalId
+                        ? loading
+                          ? "Updating..."
+                          : "Update Hospital"
+                        : loading
+                          ? "Creating..."
+                          : "Create Hospital"}
                     </Button>
                   </div>
                 </form>
@@ -903,7 +1112,7 @@ export default function HospitalManagement() {
         <Card>
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
+              <div className="flex-1 text-[0px]">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
@@ -981,15 +1190,15 @@ export default function HospitalManagement() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 gap-4">
+            <div id="hospital-list" className="grid grid-cols-1 gap-4">
               {hospitalsWithPhones.map((hospital) => (
                 <Card
                   key={hospital.id}
                   className="hover:shadow-md transition-shadow"
                 >
-                  <CardContent className="pt-6">
+                  <CardContent className="pt-6 relative">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                      <div className="flex-1">
+                      <div className="flex-1 text-[0px]">
                         <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">
                             {hospital.hospital_name}
@@ -1028,30 +1237,34 @@ export default function HospitalManagement() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
-                          <div>
-                            <p className="text-xs text-gray-500">Type</p>
-                            <p className="font-semibold text-sm">
+                        <div className="flex flex-wrap md:flex-nowrap items-center gap-8 mt-4 pt-4 border-t overflow-x-auto">
+                          <div className="flex items-center gap-2 flex-none min-w-[160px]">
+                            <span className="text-xs text-gray-500">Type:</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
                               {hospital.hospital_type || "N/A"}
-                            </p>
+                            </span>
                           </div>
-                          <div>
-                            <p className="text-xs text-gray-500">Beds</p>
-                            <p className="font-semibold text-sm">
+                          <div className="flex flex-col gap-1 items-start flex-none min-w-[100px]">
+                            <span className="text-xs text-gray-500">Beds</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
                               {hospital.number_of_beds || 0}
-                            </p>
+                            </span>
                           </div>
-                          <div>
-                            <p className="text-xs text-gray-500">Ambulances</p>
-                            <p className="font-semibold text-sm">
+                          <div className="flex flex-col gap-1 items-start flex-none min-w-[120px]">
+                            <span className="text-xs text-gray-500">
+                              Ambulances
+                            </span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
                               {hospital.number_of_ambulances || 0}
-                            </p>
+                            </span>
                           </div>
-                          <div>
-                            <p className="text-xs text-gray-500">License</p>
-                            <p className="font-semibold text-sm">
+                          <div className="flex flex-col gap-1 items-start flex-none min-w-[120px]">
+                            <span className="text-xs text-gray-500">
+                              License/Reg. Number
+                            </span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
                               {hospital.license_number || "N/A"}
-                            </p>
+                            </span>
                           </div>
                         </div>
 
@@ -1075,9 +1288,19 @@ export default function HospitalManagement() {
                           )}
                       </div>
 
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-2 items-end">
                         <p className="text-xs text-gray-500">Admin Email</p>
                         <p className="text-sm font-medium">{hospital.email}</p>
+                      </div>
+
+                      <div className="absolute right-4 bottom-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEdit(hospital)}
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
