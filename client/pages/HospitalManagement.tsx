@@ -528,7 +528,7 @@ export default function HospitalManagement() {
               <Download className="w-4 h-4 mr-2" />
               Export List
             </Button>
-            <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
+            <Dialog open={showCreateForm} onOpenChange={(open) => { setShowCreateForm(open); if (!open) setEditingHospitalId(null); }}>
               <DialogTrigger asChild>
                 <Button className="w-full sm:w-auto">
                   <Plus className="w-4 h-4 mr-2" />
@@ -537,7 +537,7 @@ export default function HospitalManagement() {
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Add New Hospital</DialogTitle>
+                  <DialogTitle>{editingHospitalId ? "Edit Hospital" : "Add New Hospital"}</DialogTitle>
                   <DialogDescription>
                     Admin-only creation. The hospital will log in using the
                     email and password you set here.
