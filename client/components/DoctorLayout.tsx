@@ -95,7 +95,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'appointment': return <Calendar className="w-4 h-4 text-blue-600" />;
-      case 'patient': return <Users className="w-4 h-4 text-green-600" />;
+      case 'customer': return <Users className="w-4 h-4 text-green-600" />;
       case 'report': return <FileText className="w-4 h-4 text-purple-600" />;
       case 'message': return <MessageSquare className="w-4 h-4 text-orange-600" />;
       default: return <Bell className="w-4 h-4 text-gray-600" />;
@@ -132,14 +132,14 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
         case 'appointment':
           window.location.href = '/appointments';
           break;
-        case 'patient':
-          window.location.href = '/my-patients';
+        case 'customer':
+          window.location.href = '/my-customers';
           break;
         case 'report':
           window.location.href = '/medical-reports';
           break;
         case 'message':
-          window.location.href = '/patient-messages';
+          window.location.href = '/customer-messages';
           break;
         default:
           console.log('Notification clicked:', notification);
@@ -272,7 +272,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search patients, appointments..."
+                  placeholder="Search customers, appointments..."
                   className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
