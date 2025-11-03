@@ -119,8 +119,8 @@ export default function Ambulance() {
           priority: "normal",
         });
 
-        // Redirect to My Ambulance Requests for patients
-        if (userRole === "patient") {
+        // Redirect to My Ambulance Requests for customers
+        if (userRole === "customer") {
           setTimeout(() => {
             window.location.href = "/my-ambulance-requests";
           }, 2000);
@@ -145,9 +145,9 @@ export default function Ambulance() {
         return DoctorLayout;
       case "staff":
         return StaffLayout;
-      case "patient":
+      case "customer":
       default:
-        return PatientLayout;
+        return CustomerLayout;
     }
   };
 

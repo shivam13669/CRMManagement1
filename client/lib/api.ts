@@ -82,10 +82,10 @@ export interface RegisterData {
   username: string;
   email: string;
   password: string;
-  role: "admin" | "doctor" | "patient" | "staff";
+  role: "admin" | "doctor" | "customer" | "staff";
   full_name: string;
   phone?: string;
-  // Patient specific fields
+  // Customer specific fields
   date_of_birth?: string;
   gender?: "male" | "female" | "other";
   blood_group?: string;
@@ -173,7 +173,7 @@ export const authApi = {
 };
 
 // Data API
-export interface Patient {
+export interface Customer {
   user_id: number;
   full_name: string;
   email: string;
@@ -198,7 +198,7 @@ export interface Doctor {
 }
 
 export interface DashboardStats {
-  totalPatients: number;
+  totalCustomers: number;
   totalDoctors: number;
   todayAppointments: number;
   pendingReports: number;

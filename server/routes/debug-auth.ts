@@ -26,7 +26,7 @@ export const handleDebugAuth: RequestHandler = async (req, res) => {
   }
 };
 
-// Debug endpoint to check patient ambulance with JWT
+// Debug endpoint to check customer ambulance with JWT
 export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (
   req,
   res,
@@ -34,22 +34,22 @@ export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (
   try {
     const { userId, role } = (req as any).user;
 
-    console.log("🔍 Debug Patient Ambulance - JWT Data:");
+    console.log("🔍 Debug Customer Ambulance - JWT Data:");
     console.log("   userId:", userId);
     console.log("   role:", role);
     console.log("   Full JWT:", (req as any).user);
 
-    if (role !== "patient") {
+    if (role !== "customer") {
       return res
         .status(403)
-        .json({ error: "Only patients can view their own requests" });
+        .json({ error: "Only customers can view their own requests" });
     }
 
     // Import db here to avoid circular imports
     const { db } = require("../database");
 
     console.log(
-      `🔍 Querying ambulance_requests WHERE patient_user_id = ${userId}`,
+      `🔍 Querying ambulance_requests WHERE customer_user_id = ${userId}`,
     );
 
     const result = db.exec(
@@ -60,7 +60,7 @@ export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (
         staff.phone as assigned_staff_phone
       FROM ambulance_requests ar
       LEFT JOIN users staff ON ar.assigned_staff_id = staff.id
-      WHERE ar.patient_user_id = ?
+      WHERE ar.customer_user_id = ?
       ORDER BY ar.created_at DESC
     `,
       [userId],
@@ -86,19 +86,19 @@ export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (
 
     res.json({
       success: true,
-      message: `Debug patient ambulance requests`,
+      message: `Debug customer ambulance requests`,
       jwtUserId: userId,
       jwtRole: role,
       jwtFull: (req as any).user,
-      queryUsed: `SELECT * FROM ambulance_requests WHERE patient_user_id = ${userId}`,
+      queryUsed: `SELECT * FROM ambulance_requests WHERE customer_user_id = ${userId}`,
       requests,
       total: requests.length,
     });
   } catch (error) {
-    console.error("❌ Error in debug patient ambulance with auth:", error);
+    console.error("❌ Error in debug customer ambulance with auth:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to debug patient ambulance with auth",
+      error: "Failed to debug customer ambulance with auth",
       details: error.message,
     });
   }

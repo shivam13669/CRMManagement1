@@ -1,5 +1,11 @@
 import { RequestHandler } from "express";
-import { getAllPatients, getAllDoctors, getDatabaseStats, createPendingRegistrationsTable, db } from '../database';
+import {
+  getAllPatients,
+  getAllDoctors,
+  getDatabaseStats,
+  createPendingRegistrationsTable,
+  db,
+} from "../database";
 
 // Debug endpoint to check database contents
 export const handleDatabaseDebug: RequestHandler = async (req, res) => {
@@ -14,12 +20,14 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
     try {
       if (db) {
         // Get users
-        const userResult = db.exec("SELECT id, username, email, role, full_name, created_at FROM users ORDER BY id");
+        const userResult = db.exec(
+          "SELECT id, username, email, role, full_name, created_at FROM users ORDER BY id",
+        );
         if (userResult.length > 0) {
           const columns = userResult[0].columns;
           const rows = userResult[0].values;
 
-          allUsers = rows.map(row => {
+          allUsers = rows.map((row) => {
             const user: any = {};
             columns.forEach((col, index) => {
               user[col] = row[index];
@@ -30,20 +38,24 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
 
         // Check if pending_registrations table exists and get structure
         try {
-          const tableInfoResult = db.exec("PRAGMA table_info(pending_registrations)");
+          const tableInfoResult = db.exec(
+            "PRAGMA table_info(pending_registrations)",
+          );
           if (tableInfoResult.length > 0) {
             tableStructure = {
               pending_registrations_exists: true,
-              columns: tableInfoResult[0].values
+              columns: tableInfoResult[0].values,
             };
 
             // Get pending registrations
-            const pendingResult = db.exec("SELECT * FROM pending_registrations ORDER BY id");
+            const pendingResult = db.exec(
+              "SELECT * FROM pending_registrations ORDER BY id",
+            );
             if (pendingResult.length > 0) {
               const columns = pendingResult[0].columns;
               const rows = pendingResult[0].values;
 
-              pendingRegistrations = rows.map(row => {
+              pendingRegistrations = rows.map((row) => {
                 const reg: any = {};
                 columns.forEach((col, index) => {
                   reg[col] = row[index];
@@ -55,7 +67,7 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
         } catch (tableError) {
           tableStructure = {
             pending_registrations_exists: false,
-            error: tableError.message
+            error: tableError.message,
           };
         }
       }
@@ -66,12 +78,14 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
     // Get ambulance requests for debugging
     let ambulanceRequests = [];
     try {
-      const ambulanceResult = db.exec("SELECT * FROM ambulance_requests ORDER BY created_at DESC");
+      const ambulanceResult = db.exec(
+        "SELECT * FROM ambulance_requests ORDER BY created_at DESC",
+      );
       if (ambulanceResult.length > 0) {
         const columns = ambulanceResult[0].columns;
         const rows = ambulanceResult[0].values;
 
-        ambulanceRequests = rows.map(row => {
+        ambulanceRequests = rows.map((row) => {
           const request: any = {};
           columns.forEach((col, index) => {
             request[col] = row[index];
@@ -89,11 +103,11 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
       pendingRegistrations,
       ambulanceRequests,
       tableStructure,
-      message: "Database debug info"
+      message: "Database debug info",
     });
   } catch (error) {
-    console.error('Debug error:', error);
-    res.status(500).json({ error: 'Debug endpoint error' });
+    console.error("Debug error:", error);
+    res.status(500).json({ error: "Debug endpoint error" });
   }
 };
 
@@ -101,23 +115,23 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
 export const handleClearUsers: RequestHandler = async (req, res) => {
   try {
     if (db) {
-      db.run("DELETE FROM patients");
+      db.run("DELETE FROM customers");
       db.run("DELETE FROM doctors");
       db.run("DELETE FROM users");
 
       // Save database
-      const fs = require('fs');
-      const path = require('path');
+      const fs = require("fs");
+      const path = require("path");
       const data = db.export();
-      fs.writeFileSync(path.join(process.cwd(), 'healthcare.db'), data);
+      fs.writeFileSync(path.join(process.cwd(), "healthcare.db"), data);
 
-      console.log('✅ All users cleared from database');
+      console.log("✅ All users cleared from database");
     }
 
     res.json({ message: "All users cleared successfully" });
   } catch (error) {
-    console.error('Clear users error:', error);
-    res.status(500).json({ error: 'Error clearing users' });
+    console.error("Clear users error:", error);
+    res.status(500).json({ error: "Error clearing users" });
   }
 };
 
@@ -127,14 +141,20 @@ export const handleCreatePendingTable: RequestHandler = async (req, res) => {
     await createPendingRegistrationsTable();
 
     // Verify table creation
-    const tableCheck = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='pending_registrations'");
+    const tableCheck = db.exec(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='pending_registrations'",
+    );
 
     res.json({
       message: "Pending registrations table created successfully",
-      tableExists: tableCheck.length > 0
+      tableExists: tableCheck.length > 0,
     });
   } catch (error) {
-    console.error('Create table error:', error);
-    res.status(500).json({ error: 'Error creating pending registrations table: ' + error.message });
+    console.error("Create table error:", error);
+    res
+      .status(500)
+      .json({
+        error: "Error creating pending registrations table: " + error.message,
+      });
   }
 };

@@ -225,7 +225,7 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
             </div>
             <div>
               <div className="font-medium text-gray-900">{userName}</div>
-              <div className="text-sm text-primary">Patient</div>
+              <div className="text-sm text-primary">Customer</div>
             </div>
           </div>
         </div>

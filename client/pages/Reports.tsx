@@ -1,12 +1,33 @@
 import { useState, useEffect } from "react";
 import { Layout } from "../components/Layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Calendar } from "../components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../components/ui/popover";
 import { cn } from "../lib/utils";
 import { format } from "date-fns";
 import {
@@ -27,11 +48,11 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  MoreHorizontal
+  MoreHorizontal,
 } from "lucide-react";
 
 interface DashboardStats {
-  totalPatients: number;
+  totalCustomers: number;
   totalDoctors: number;
   totalAppointments: number;
   totalComplaints: number;
@@ -41,9 +62,9 @@ interface DashboardStats {
   pendingRegistrations: number;
 }
 
-interface PatientGrowth {
+interface CustomerGrowth {
   month: string;
-  patients: number;
+  customers: number;
   doctors: number;
 }
 
@@ -65,26 +86,26 @@ export default function Reports() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    to: new Date()
+    to: new Date(),
   });
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [refreshing, setRefreshing] = useState(false);
 
   // Mock data - In a real app, this would come from APIs
-  const patientGrowth: PatientGrowth[] = [
-    { month: "Jan", patients: 120, doctors: 15 },
-    { month: "Feb", patients: 135, doctors: 16 },
-    { month: "Mar", patients: 148, doctors: 18 },
-    { month: "Apr", patients: 162, doctors: 19 },
-    { month: "May", patients: 178, doctors: 20 },
-    { month: "Jun", patients: 195, doctors: 22 }
+  const customerGrowth: CustomerGrowth[] = [
+    { month: "Jan", customers: 120, doctors: 15 },
+    { month: "Feb", customers: 135, doctors: 16 },
+    { month: "Mar", customers: 148, doctors: 18 },
+    { month: "Apr", customers: 162, doctors: 19 },
+    { month: "May", customers: 178, doctors: 20 },
+    { month: "Jun", customers: 195, doctors: 22 },
   ];
 
   const appointmentStats: AppointmentStats[] = [
     { status: "Completed", count: 245, percentage: 68 },
     { status: "Pending", count: 58, percentage: 16 },
     { status: "Confirmed", count: 42, percentage: 12 },
-    { status: "Cancelled", count: 15, percentage: 4 }
+    { status: "Cancelled", count: 15, percentage: 4 },
   ];
 
   const complaintStats: ComplaintStats[] = [
@@ -92,7 +113,7 @@ export default function Reports() {
     { type: "Facility", count: 18, avgRating: 3.8, resolvedPercentage: 94 },
     { type: "Staff", count: 12, avgRating: 4.1, resolvedPercentage: 92 },
     { type: "Doctor", count: 8, avgRating: 4.5, resolvedPercentage: 100 },
-    { type: "Billing", count: 15, avgRating: 3.9, resolvedPercentage: 80 }
+    { type: "Billing", count: 15, avgRating: 3.9, resolvedPercentage: 80 },
   ];
 
   useEffect(() => {
@@ -103,17 +124,17 @@ export default function Reports() {
     setLoading(true);
     try {
       // Simulate API calls
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       setStats({
-        totalPatients: 195,
+        totalCustomers: 195,
         totalDoctors: 22,
         totalAppointments: 360,
         totalComplaints: 76,
         totalFeedback: 142,
         revenueThisMonth: 45600,
         activeUsers: 198,
-        pendingRegistrations: 5
+        pendingRegistrations: 5,
       });
     } catch (error) {
       console.error("Error fetching reports data:", error);
@@ -153,12 +174,14 @@ export default function Reports() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Reports & Analytics
+            </h1>
             <p className="text-gray-600 mt-2">
               Comprehensive insights into your healthcare management system
             </p>
           </div>
-          
+
           <div className="flex flex-wrap gap-2">
             <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
               <SelectTrigger className="w-32">
@@ -171,9 +194,9 @@ export default function Reports() {
                 <SelectItem value="year">This Year</SelectItem>
               </SelectContent>
             </Select>
-            
-            <Button 
-              variant="outline" 
+
+            <Button
+              variant="outline"
               onClick={handleRefresh}
               disabled={refreshing}
               className="min-w-[100px]"
@@ -185,7 +208,7 @@ export default function Reports() {
               )}
               Refresh
             </Button>
-            
+
             <Button onClick={() => exportReport("summary")}>
               <Download className="w-4 h-4 mr-2" />
               Export
@@ -199,8 +222,12 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Patients</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats?.totalPatients || 0}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Customers
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats?.totalCustomers || 0}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" />
                     +12% from last month
@@ -217,8 +244,12 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Doctors</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats?.totalDoctors || 0}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Doctors
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats?.totalDoctors || 0}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" />
                     +2 new this month
@@ -235,8 +266,12 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Appointments</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats?.totalAppointments || 0}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Appointments
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats?.totalAppointments || 0}
+                  </p>
                   <p className="text-xs text-red-600 flex items-center mt-1">
                     <TrendingDown className="w-3 h-3 mr-1" />
                     -5% from last month
@@ -253,8 +288,12 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Revenue (MTD)</p>
-                  <p className="text-2xl font-bold text-gray-900">₹{stats?.revenueThisMonth?.toLocaleString() || 0}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Revenue (MTD)
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    ₹{stats?.revenueThisMonth?.toLocaleString() || 0}
+                  </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" />
                     +8% from last month
@@ -273,7 +312,7 @@ export default function Reports() {
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="appointments">Appointments</TabsTrigger>
-            <TabsTrigger value="patients">Patient Analytics</TabsTrigger>
+            <TabsTrigger value="customers">Customer Analytics</TabsTrigger>
             <TabsTrigger value="feedback">Feedback & Complaints</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
           </TabsList>
@@ -281,7 +320,7 @@ export default function Reports() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Patient & Doctor Growth Chart */}
+              {/* Customer & Doctor Growth Chart */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -289,7 +328,7 @@ export default function Reports() {
                     Growth Trends
                   </CardTitle>
                   <CardDescription>
-                    Patient and doctor registration trends over time
+                    Customer and doctor registration trends over time
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -297,7 +336,7 @@ export default function Reports() {
                     <div className="flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2">
                         <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        Patients
+                        Customers
                       </span>
                       <span className="flex items-center gap-2">
                         <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -306,23 +345,34 @@ export default function Reports() {
                     </div>
                     {/* Simple text-based chart */}
                     <div className="space-y-2">
-                      {patientGrowth.map((item, index) => (
-                        <div key={index} className="flex items-center justify-between text-sm">
+                      {customerGrowth.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between text-sm"
+                        >
                           <span className="w-12">{item.month}</span>
                           <div className="flex-1 flex items-center gap-4 ml-4">
                             <div className="flex items-center gap-2">
-                              <div 
-                                className="h-2 bg-blue-500 rounded" 
-                                style={{ width: `${(item.patients / 200) * 100}px` }}
+                              <div
+                                className="h-2 bg-blue-500 rounded"
+                                style={{
+                                  width: `${(item.customers / 200) * 100}px`,
+                                }}
                               ></div>
-                              <span className="text-xs text-gray-600">{item.patients}</span>
+                              <span className="text-xs text-gray-600">
+                                {item.customers}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <div 
-                                className="h-2 bg-green-500 rounded" 
-                                style={{ width: `${(item.doctors / 25) * 100}px` }}
+                              <div
+                                className="h-2 bg-green-500 rounded"
+                                style={{
+                                  width: `${(item.doctors / 25) * 100}px`,
+                                }}
                               ></div>
-                              <span className="text-xs text-gray-600">{item.doctors}</span>
+                              <span className="text-xs text-gray-600">
+                                {item.doctors}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -346,19 +396,29 @@ export default function Reports() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Active Users</span>
+                      <span className="text-sm text-gray-600">
+                        Active Users
+                      </span>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-green-600 border-green-200">
+                        <Badge
+                          variant="outline"
+                          className="text-green-600 border-green-200"
+                        >
                           <CheckCircle2 className="w-3 h-3 mr-1" />
                           {stats?.activeUsers} Online
                         </Badge>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Pending Registrations</span>
+                      <span className="text-sm text-gray-600">
+                        Pending Registrations
+                      </span>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-yellow-600 border-yellow-200">
+                        <Badge
+                          variant="outline"
+                          className="text-yellow-600 border-yellow-200"
+                        >
                           <Clock className="w-3 h-3 mr-1" />
                           {stats?.pendingRegistrations} Pending
                         </Badge>
@@ -366,9 +426,14 @@ export default function Reports() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Database Status</span>
+                      <span className="text-sm text-gray-600">
+                        Database Status
+                      </span>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-green-600 border-green-200">
+                        <Badge
+                          variant="outline"
+                          className="text-green-600 border-green-200"
+                        >
                           <CheckCircle2 className="w-3 h-3 mr-1" />
                           Healthy
                         </Badge>
@@ -376,7 +441,9 @@ export default function Reports() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Server Uptime</span>
+                      <span className="text-sm text-gray-600">
+                        Server Uptime
+                      </span>
                       <span className="text-sm font-medium">99.9%</span>
                     </div>
                   </div>
@@ -398,19 +465,28 @@ export default function Reports() {
                 <CardContent>
                   <div className="space-y-4">
                     {appointmentStats.map((stat, index) => (
-                      <div key={index} className="flex items-center justify-between">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
                         <div className="flex items-center gap-3">
-                          <div className={cn(
-                            "w-3 h-3 rounded-full",
-                            stat.status === "Completed" && "bg-green-500",
-                            stat.status === "Pending" && "bg-yellow-500",
-                            stat.status === "Confirmed" && "bg-blue-500",
-                            stat.status === "Cancelled" && "bg-red-500"
-                          )}></div>
-                          <span className="text-sm font-medium">{stat.status}</span>
+                          <div
+                            className={cn(
+                              "w-3 h-3 rounded-full",
+                              stat.status === "Completed" && "bg-green-500",
+                              stat.status === "Pending" && "bg-yellow-500",
+                              stat.status === "Confirmed" && "bg-blue-500",
+                              stat.status === "Cancelled" && "bg-red-500",
+                            )}
+                          ></div>
+                          <span className="text-sm font-medium">
+                            {stat.status}
+                          </span>
                         </div>
                         <div className="flex items-center gap-4">
-                          <span className="text-sm text-gray-600">{stat.count}</span>
+                          <span className="text-sm text-gray-600">
+                            {stat.count}
+                          </span>
                           <Badge variant="secondary">{stat.percentage}%</Badge>
                         </div>
                       </div>
@@ -428,20 +504,35 @@ export default function Reports() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day, index) => {
+                    {[
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                      "Sunday",
+                    ].map((day, index) => {
                       const count = Math.floor(Math.random() * 20) + 5;
                       return (
-                        <div key={index} className="flex items-center justify-between">
-                          <span className="text-sm font-medium w-20">{day}</span>
+                        <div
+                          key={index}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="text-sm font-medium w-20">
+                            {day}
+                          </span>
                           <div className="flex-1 mx-4">
                             <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-blue-500 h-2 rounded-full" 
+                              <div
+                                className="bg-blue-500 h-2 rounded-full"
                                 style={{ width: `${(count / 25) * 100}%` }}
                               ></div>
                             </div>
                           </div>
-                          <span className="text-sm text-gray-600 w-8">{count}</span>
+                          <span className="text-sm text-gray-600 w-8">
+                            {count}
+                          </span>
                         </div>
                       );
                     })}
@@ -451,12 +542,12 @@ export default function Reports() {
             </div>
           </TabsContent>
 
-          {/* Patient Analytics Tab */}
-          <TabsContent value="patients" className="space-y-6">
+          {/* Customer Analytics Tab */}
+          <TabsContent value="customers" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Patient Demographics</CardTitle>
+                  <CardTitle>Customer Demographics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -466,7 +557,10 @@ export default function Reports() {
                         <span>35%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: "35%" }}></div>
+                        <div
+                          className="bg-blue-500 h-2 rounded-full"
+                          style={{ width: "35%" }}
+                        ></div>
                       </div>
                     </div>
                     <div>
@@ -475,7 +569,10 @@ export default function Reports() {
                         <span>45%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{ width: "45%" }}></div>
+                        <div
+                          className="bg-green-500 h-2 rounded-full"
+                          style={{ width: "45%" }}
+                        ></div>
                       </div>
                     </div>
                     <div>
@@ -484,7 +581,10 @@ export default function Reports() {
                         <span>20%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-purple-500 h-2 rounded-full" style={{ width: "20%" }}></div>
+                        <div
+                          className="bg-purple-500 h-2 rounded-full"
+                          style={{ width: "20%" }}
+                        ></div>
                       </div>
                     </div>
                   </div>
@@ -502,9 +602,12 @@ export default function Reports() {
                       { condition: "Diabetes", count: 38 },
                       { condition: "Allergies", count: 29 },
                       { condition: "Asthma", count: 22 },
-                      { condition: "Heart Disease", count: 15 }
+                      { condition: "Heart Disease", count: 15 },
                     ].map((item, index) => (
-                      <div key={index} className="flex items-center justify-between">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
                         <span className="text-sm">{item.condition}</span>
                         <Badge variant="outline">{item.count}</Badge>
                       </div>
@@ -515,24 +618,30 @@ export default function Reports() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Patient Satisfaction</CardTitle>
+                  <CardTitle>Customer Satisfaction</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center space-y-4">
                     <div>
-                      <div className="text-3xl font-bold text-green-600">4.6</div>
+                      <div className="text-3xl font-bold text-green-600">
+                        4.6
+                      </div>
                       <div className="flex justify-center">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star 
-                            key={star} 
+                          <Star
+                            key={star}
                             className={cn(
                               "w-4 h-4",
-                              star <= 4.6 ? "text-yellow-400 fill-current" : "text-gray-300"
-                            )} 
+                              star <= 4.6
+                                ? "text-yellow-400 fill-current"
+                                : "text-gray-300",
+                            )}
                           />
                         ))}
                       </div>
-                      <p className="text-sm text-gray-600 mt-2">Average Rating</p>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Average Rating
+                      </p>
                     </div>
                     <div className="text-sm text-gray-600">
                       Based on {stats?.totalFeedback} reviews
@@ -549,7 +658,8 @@ export default function Reports() {
               <CardHeader>
                 <CardTitle>Feedback & Complaint Analysis</CardTitle>
                 <CardDescription>
-                  Detailed breakdown of patient feedback and complaints by category
+                  Detailed breakdown of customer feedback and complaints by
+                  category
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -560,49 +670,65 @@ export default function Reports() {
                         <h4 className="font-medium">{stat.type}</h4>
                         <Badge variant="outline">{stat.count} cases</Badge>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                         <div>
                           <span className="text-gray-600">Average Rating:</span>
                           <div className="flex items-center gap-1 mt-1">
-                            <span className="font-medium">{stat.avgRating}</span>
+                            <span className="font-medium">
+                              {stat.avgRating}
+                            </span>
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((star) => (
-                                <Star 
-                                  key={star} 
+                                <Star
+                                  key={star}
                                   className={cn(
                                     "w-3 h-3",
-                                    star <= stat.avgRating ? "text-yellow-400 fill-current" : "text-gray-300"
-                                  )} 
+                                    star <= stat.avgRating
+                                      ? "text-yellow-400 fill-current"
+                                      : "text-gray-300",
+                                  )}
                                 />
                               ))}
                             </div>
                           </div>
                         </div>
-                        
+
                         <div>
-                          <span className="text-gray-600">Resolution Rate:</span>
+                          <span className="text-gray-600">
+                            Resolution Rate:
+                          </span>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="font-medium">{stat.resolvedPercentage}%</span>
+                            <span className="font-medium">
+                              {stat.resolvedPercentage}%
+                            </span>
                             <div className="flex-1 bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-green-500 h-2 rounded-full" 
+                              <div
+                                className="bg-green-500 h-2 rounded-full"
                                 style={{ width: `${stat.resolvedPercentage}%` }}
                               ></div>
                             </div>
                           </div>
                         </div>
-                        
+
                         <div>
                           <span className="text-gray-600">Status:</span>
                           <div className="mt-1">
-                            <Badge 
-                              variant={stat.resolvedPercentage >= 90 ? "default" : "secondary"}
+                            <Badge
+                              variant={
+                                stat.resolvedPercentage >= 90
+                                  ? "default"
+                                  : "secondary"
+                              }
                               className={cn(
-                                stat.resolvedPercentage >= 90 ? "bg-green-600" : "bg-yellow-600"
+                                stat.resolvedPercentage >= 90
+                                  ? "bg-green-600"
+                                  : "bg-yellow-600",
                               )}
                             >
-                              {stat.resolvedPercentage >= 90 ? "Excellent" : "Needs Attention"}
+                              {stat.resolvedPercentage >= 90
+                                ? "Excellent"
+                                : "Needs Attention"}
                             </Badge>
                           </div>
                         </div>
@@ -620,22 +746,26 @@ export default function Reports() {
               <Card>
                 <CardHeader>
                   <CardTitle>Revenue Overview</CardTitle>
-                  <CardDescription>
-                    Monthly revenue breakdown
-                  </CardDescription>
+                  <CardDescription>Monthly revenue breakdown</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Consultation Fees</span>
+                      <span className="text-sm text-gray-600">
+                        Consultation Fees
+                      </span>
                       <span className="font-medium">₹32,400</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Emergency Services</span>
+                      <span className="text-sm text-gray-600">
+                        Emergency Services
+                      </span>
                       <span className="font-medium">₹8,900</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Ambulance Services</span>
+                      <span className="text-sm text-gray-600">
+                        Ambulance Services
+                      </span>
                       <span className="font-medium">₹4,300</span>
                     </div>
                     <hr />
@@ -657,10 +787,18 @@ export default function Reports() {
                 <CardContent>
                   <div className="space-y-3">
                     {[
-                      { method: "Credit/Debit Card", percentage: 45, amount: "₹20,520" },
-                      { method: "UPI/Digital Wallet", percentage: 35, amount: "₹15,960" },
-                      { method: "Cash", percentage: 15, amount: "₹6,840" },
-                      { method: "Insurance", percentage: 5, amount: "₹2,280" }
+                      {
+                        method: "Credit/Debit Card",
+                        percentage: 45,
+                        amount: "₹20,520",
+                      },
+                      {
+                        method: "UPI/Digital Wallet",
+                        percentage: 35,
+                        amount: "₹15,960",
+                      },
+                      { method: "Cash", percentage: 15, amount: "���6,840" },
+                      { method: "Insurance", percentage: 5, amount: "₹2,280" },
                     ].map((item, index) => (
                       <div key={index} className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
@@ -668,12 +806,14 @@ export default function Reports() {
                           <span className="font-medium">{item.amount}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-500 h-2 rounded-full" 
+                          <div
+                            className="bg-blue-500 h-2 rounded-full"
                             style={{ width: `${item.percentage}%` }}
                           ></div>
                         </div>
-                        <div className="text-xs text-gray-600">{item.percentage}% of total</div>
+                        <div className="text-xs text-gray-600">
+                          {item.percentage}% of total
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -696,24 +836,24 @@ export default function Reports() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => exportReport("patients")}
                 className="justify-start"
               >
                 <FileText className="w-4 h-4 mr-2" />
-                Patient Report (PDF)
+                Customer Report (PDF)
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => exportReport("appointments")}
                 className="justify-start"
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Appointments Report (Excel)
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => exportReport("financial")}
                 className="justify-start"
               >
