@@ -101,7 +101,7 @@ export const handleDatabaseDebug: RequestHandler = async (req, res) => {
 export const handleClearUsers: RequestHandler = async (req, res) => {
   try {
     if (db) {
-      db.run("DELETE FROM patients");
+      db.run("DELETE FROM customers");
       db.run("DELETE FROM doctors");
       db.run("DELETE FROM users");
 
