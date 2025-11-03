@@ -480,7 +480,8 @@ export default function UserManagement() {
                                       <DialogHeader>
                                         <DialogTitle>User Details</DialogTitle>
                                         <DialogDescription>
-                                          Complete information about {selectedUser?.full_name}
+                                          Complete information about{" "}
+                                          {selectedUser?.full_name}
                                         </DialogDescription>
                                       </DialogHeader>
 
@@ -489,49 +490,82 @@ export default function UserManagement() {
                                           {/* Basic Info */}
                                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
-                                              <h3 className="font-medium mb-2">Personal Information</h3>
+                                              <h3 className="font-medium mb-2">
+                                                Personal Information
+                                              </h3>
                                               <div className="space-y-2 text-sm">
                                                 <div className="flex items-center space-x-2">
                                                   <User className="w-4 h-4 text-gray-400" />
-                                                  <span>{selectedUser.full_name}</span>
+                                                  <span>
+                                                    {selectedUser.full_name}
+                                                  </span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                   <User className="w-4 h-4 text-gray-400" />
-                                                  <span>@{selectedUser.username}</span>
+                                                  <span>
+                                                    @{selectedUser.username}
+                                                  </span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                   <User className="w-4 h-4 text-gray-400" />
-                                                  <span>{selectedUser.email}</span>
+                                                  <span>
+                                                    {selectedUser.email}
+                                                  </span>
                                                 </div>
                                                 {selectedUser.phone && (
                                                   <div className="flex items-center space-x-2">
                                                     <User className="w-4 h-4 text-gray-400" />
-                                                    <span>{selectedUser.phone}</span>
+                                                    <span>
+                                                      {selectedUser.phone}
+                                                    </span>
                                                   </div>
                                                 )}
                                               </div>
                                             </div>
 
                                             <div>
-                                              <h3 className="font-medium mb-2">Account Details</h3>
+                                              <h3 className="font-medium mb-2">
+                                                Account Details
+                                              </h3>
                                               <div className="space-y-2 text-sm">
                                                 <div className="flex items-center space-x-2">
                                                   <div className="w-4 h-4 flex items-center justify-center">
-                                                    {getRoleIcon(selectedUser.role)}
+                                                    {getRoleIcon(
+                                                      selectedUser.role,
+                                                    )}
                                                   </div>
-                                                  <span>Role: {selectedUser.role.charAt(0).toUpperCase() + selectedUser.role.slice(1)}</span>
+                                                  <span>
+                                                    Role:{" "}
+                                                    {selectedUser.role
+                                                      .charAt(0)
+                                                      .toUpperCase() +
+                                                      selectedUser.role.slice(
+                                                        1,
+                                                      )}
+                                                  </span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                  {selectedUser.status === 'active' ? (
+                                                  {selectedUser.status ===
+                                                  "active" ? (
                                                     <CheckCircle className="w-4 h-4 text-green-500" />
                                                   ) : (
                                                     <XCircle className="w-4 h-4 text-red-500" />
                                                   )}
-                                                  <span>Status: {selectedUser.status.charAt(0).toUpperCase() + selectedUser.status.slice(1)}</span>
+                                                  <span>
+                                                    Status:{" "}
+                                                    {selectedUser.status
+                                                      .charAt(0)
+                                                      .toUpperCase() +
+                                                      selectedUser.status.slice(
+                                                        1,
+                                                      )}
+                                                  </span>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                   <User className="w-4 h-4 text-gray-400" />
-                                                  <span>User ID: #{selectedUser.id}</span>
+                                                  <span>
+                                                    User ID: #{selectedUser.id}
+                                                  </span>
                                                 </div>
                                               </div>
                                             </div>
@@ -539,40 +573,79 @@ export default function UserManagement() {
 
                                           {/* Timestamps */}
                                           <div>
-                                            <h3 className="font-medium mb-2">Account Timeline</h3>
+                                            <h3 className="font-medium mb-2">
+                                              Account Timeline
+                                            </h3>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                                               <div className="flex items-center space-x-2">
                                                 <User className="w-4 h-4 text-gray-400" />
-                                                <span>Created: {new Date(selectedUser.created_at).toLocaleDateString()} at {new Date(selectedUser.created_at).toLocaleTimeString()}</span>
+                                                <span>
+                                                  Created:{" "}
+                                                  {new Date(
+                                                    selectedUser.created_at,
+                                                  ).toLocaleDateString()}{" "}
+                                                  at{" "}
+                                                  {new Date(
+                                                    selectedUser.created_at,
+                                                  ).toLocaleTimeString()}
+                                                </span>
                                               </div>
                                               <div className="flex items-center space-x-2">
                                                 <User className="w-4 h-4 text-gray-400" />
-                                                <span>Updated: {new Date(selectedUser.updated_at).toLocaleDateString()} at {new Date(selectedUser.updated_at).toLocaleTimeString()}</span>
+                                                <span>
+                                                  Updated:{" "}
+                                                  {new Date(
+                                                    selectedUser.updated_at,
+                                                  ).toLocaleDateString()}{" "}
+                                                  at{" "}
+                                                  {new Date(
+                                                    selectedUser.updated_at,
+                                                  ).toLocaleTimeString()}
+                                                </span>
                                               </div>
                                             </div>
                                           </div>
 
                                           {/* Action Buttons */}
                                           <div className="flex flex-wrap gap-2 pt-4">
-                                            {selectedUser.status === 'active' ? (
+                                            {selectedUser.status ===
+                                            "active" ? (
                                               <AlertDialog>
                                                 <AlertDialogTrigger asChild>
-                                                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                                                  <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="flex-1 sm:flex-none"
+                                                  >
                                                     <ShieldOff className="w-4 h-4 mr-2" />
                                                     Suspend User
                                                   </Button>
                                                 </AlertDialogTrigger>
                                                 <AlertDialogContent>
                                                   <AlertDialogHeader>
-                                                    <AlertDialogTitle>Suspend User</AlertDialogTitle>
+                                                    <AlertDialogTitle>
+                                                      Suspend User
+                                                    </AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                      Are you sure you want to suspend {selectedUser.full_name}? They will not be able to access their account until reactivated.
+                                                      Are you sure you want to
+                                                      suspend{" "}
+                                                      {selectedUser.full_name}?
+                                                      They will not be able to
+                                                      access their account until
+                                                      reactivated.
                                                     </AlertDialogDescription>
                                                   </AlertDialogHeader>
                                                   <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogCancel>
+                                                      Cancel
+                                                    </AlertDialogCancel>
                                                     <AlertDialogAction
-                                                      onClick={() => handleSuspendUser(selectedUser.id, selectedUser.full_name)}
+                                                      onClick={() =>
+                                                        handleSuspendUser(
+                                                          selectedUser.id,
+                                                          selectedUser.full_name,
+                                                        )
+                                                      }
                                                       className="bg-orange-600 hover:bg-orange-700"
                                                     >
                                                       Suspend
@@ -584,7 +657,12 @@ export default function UserManagement() {
                                               <Button
                                                 variant="outline"
                                                 size="sm"
-                                                onClick={() => handleReactivateUser(selectedUser.id, selectedUser.full_name)}
+                                                onClick={() =>
+                                                  handleReactivateUser(
+                                                    selectedUser.id,
+                                                    selectedUser.full_name,
+                                                  )
+                                                }
                                                 className="flex-1 sm:flex-none"
                                               >
                                                 <Shield className="w-4 h-4 mr-2" />
@@ -594,7 +672,11 @@ export default function UserManagement() {
 
                                             <AlertDialog>
                                               <AlertDialogTrigger asChild>
-                                                <Button variant="destructive" size="sm" className="flex-1 sm:flex-none">
+                                                <Button
+                                                  variant="destructive"
+                                                  size="sm"
+                                                  className="flex-1 sm:flex-none"
+                                                >
                                                   <Trash2 className="w-4 h-4 mr-2" />
                                                   Delete User
                                                 </Button>
@@ -606,13 +688,26 @@ export default function UserManagement() {
                                                     Delete User
                                                   </AlertDialogTitle>
                                                   <AlertDialogDescription>
-                                                    <strong>Warning:</strong> This action cannot be undone. This will permanently delete {selectedUser.full_name}'s account and remove all of their data from our servers.
+                                                    <strong>Warning:</strong>{" "}
+                                                    This action cannot be
+                                                    undone. This will
+                                                    permanently delete{" "}
+                                                    {selectedUser.full_name}'s
+                                                    account and remove all of
+                                                    their data from our servers.
                                                   </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
-                                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                  <AlertDialogCancel>
+                                                    Cancel
+                                                  </AlertDialogCancel>
                                                   <AlertDialogAction
-                                                    onClick={() => handleDeleteUser(selectedUser.id, selectedUser.full_name)}
+                                                    onClick={() =>
+                                                      handleDeleteUser(
+                                                        selectedUser.id,
+                                                        selectedUser.full_name,
+                                                      )
+                                                    }
                                                     className="bg-red-600 hover:bg-red-700"
                                                   >
                                                     Delete Permanently

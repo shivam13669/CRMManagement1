@@ -4,49 +4,56 @@ import { RequestHandler } from "express";
 export const handleDebugAuth: RequestHandler = async (req, res) => {
   try {
     const user = (req as any).user;
-    
-    console.log('🔍 Debug Auth - JWT Token Contents:', user);
-    
+
+    console.log("🔍 Debug Auth - JWT Token Contents:", user);
+
     res.json({
       success: true,
-      message: 'JWT token contents',
+      message: "JWT token contents",
       jwtData: user,
       userId: user?.userId,
       email: user?.email,
       role: user?.role,
-      full_name: user?.full_name
+      full_name: user?.full_name,
     });
-
   } catch (error) {
-    console.error('❌ Error in auth debug:', error);
-    res.status(500).json({ 
+    console.error("❌ Error in auth debug:", error);
+    res.status(500).json({
       success: false,
-      error: 'Failed to debug auth',
-      details: error.message 
+      error: "Failed to debug auth",
+      details: error.message,
     });
   }
 };
 
 // Debug endpoint to check patient ambulance with JWT
-export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (req, res) => {
+export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (
+  req,
+  res,
+) => {
   try {
     const { userId, role } = (req as any).user;
-    
-    console.log('🔍 Debug Patient Ambulance - JWT Data:');
-    console.log('   userId:', userId);
-    console.log('   role:', role);
-    console.log('   Full JWT:', (req as any).user);
 
-    if (role !== 'patient') {
-      return res.status(403).json({ error: 'Only patients can view their own requests' });
+    console.log("🔍 Debug Patient Ambulance - JWT Data:");
+    console.log("   userId:", userId);
+    console.log("   role:", role);
+    console.log("   Full JWT:", (req as any).user);
+
+    if (role !== "patient") {
+      return res
+        .status(403)
+        .json({ error: "Only patients can view their own requests" });
     }
 
     // Import db here to avoid circular imports
-    const { db } = require('../database');
+    const { db } = require("../database");
 
-    console.log(`🔍 Querying ambulance_requests WHERE patient_user_id = ${userId}`);
+    console.log(
+      `🔍 Querying ambulance_requests WHERE patient_user_id = ${userId}`,
+    );
 
-    const result = db.exec(`
+    const result = db.exec(
+      `
       SELECT
         ar.*,
         staff.full_name as assigned_staff_name,
@@ -55,14 +62,16 @@ export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (req, r
       LEFT JOIN users staff ON ar.assigned_staff_id = staff.id
       WHERE ar.patient_user_id = ?
       ORDER BY ar.created_at DESC
-    `, [userId]);
+    `,
+      [userId],
+    );
 
     let requests = [];
     if (result.length > 0) {
       const columns = result[0].columns;
       const rows = result[0].values;
 
-      requests = rows.map(row => {
+      requests = rows.map((row) => {
         const request: any = {};
         columns.forEach((col, index) => {
           request[col] = row[index];
@@ -71,7 +80,9 @@ export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (req, r
       });
     }
 
-    console.log(`✅ Found ${requests.length} ambulance requests for userId ${userId}`);
+    console.log(
+      `✅ Found ${requests.length} ambulance requests for userId ${userId}`,
+    );
 
     res.json({
       success: true,
@@ -81,15 +92,14 @@ export const handleDebugPatientAmbulanceWithAuth: RequestHandler = async (req, r
       jwtFull: (req as any).user,
       queryUsed: `SELECT * FROM ambulance_requests WHERE patient_user_id = ${userId}`,
       requests,
-      total: requests.length
+      total: requests.length,
     });
-
   } catch (error) {
-    console.error('❌ Error in debug patient ambulance with auth:', error);
-    res.status(500).json({ 
+    console.error("❌ Error in debug patient ambulance with auth:", error);
+    res.status(500).json({
       success: false,
-      error: 'Failed to debug patient ambulance with auth',
-      details: error.message 
+      error: "Failed to debug patient ambulance with auth",
+      details: error.message,
     });
   }
 };
