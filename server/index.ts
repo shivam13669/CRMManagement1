@@ -136,6 +136,7 @@ export async function createServer() {
   app.get("/api/hospital/profile", authenticateToken, handleGetHospital);
   app.get("/api/admin/hospitals", authenticateToken, handleGetAllHospitals);
   app.put("/api/hospital/update", authenticateToken, handleUpdateHospital);
+  app.put("/api/admin/hospitals/:id", authenticateToken, handleAdminUpdateHospital);
 
   // Data routes (protected)
   app.get("/api/customers", authenticateToken, handleGetCustomers);
