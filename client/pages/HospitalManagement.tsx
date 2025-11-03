@@ -743,7 +743,7 @@ export default function HospitalManagement() {
                       </div>
                       <div>
                         <Label htmlFor="license_number">
-                          License/registration number
+                          License/Reg. Number
                         </Label>
                         <Input
                           id="license_number"
@@ -1085,7 +1085,7 @@ export default function HospitalManagement() {
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</p>
                           </div>
                           <div className="flex items-baseline gap-2 flex-none min-w-[120px]">
-                            <p className="text-xs text-gray-500">License</p>
+                            <p className="text-xs text-gray-500">License/Reg. Number</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</p>
                           </div>
                         </div>
