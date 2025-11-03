@@ -90,6 +90,8 @@ export default function HospitalManagement() {
   const [countryCode, setCountryCode] = useState("+91");
   const [contactNumberInput, setContactNumberInput] = useState("");
   const [contactNumbers, setContactNumbers] = useState<string[]>([]);
+  const [departmentInput, setDepartmentInput] = useState("");
+  const [departmentItems, setDepartmentItems] = useState<string[]>([]);
 
   useEffect(() => {
     fetchHospitals();
@@ -150,6 +152,30 @@ export default function HospitalManagement() {
     setContactNumbers((prev) => prev.filter((n) => n !== num));
   };
 
+  const addDepartment = () => {
+    const parts = departmentInput
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (parts.length === 0) return;
+    setDepartmentItems((prev) => {
+      const set = new Set(prev.map((s) => s.toLowerCase()));
+      const merged: string[] = [...prev];
+      for (const p of parts) {
+        if (!set.has(p.toLowerCase())) {
+          merged.push(p);
+          set.add(p.toLowerCase());
+        }
+      }
+      return merged;
+    });
+    setDepartmentInput("");
+  };
+
+  const removeDepartment = (dept: string) => {
+    setDepartmentItems((prev) => prev.filter((d) => d !== dept));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -199,7 +225,9 @@ export default function HospitalManagement() {
             10,
           ),
           number_of_beds: parseInt(formData.number_of_beds || "0", 10),
-          departments: formData.departments || undefined,
+          departments: departmentItems.length
+            ? departmentItems.join(",")
+            : undefined,
           google_map_enabled: formData.location_enabled,
           google_map_link: formData.location_enabled
             ? formData.location_link
@@ -251,6 +279,8 @@ export default function HospitalManagement() {
       setCountryCode("+91");
       setContactNumbers([]);
       setContactNumberInput("");
+      setDepartmentItems([]);
+      setDepartmentInput("");
       setShowCreateForm(false);
       fetchHospitals();
     } catch (error) {
@@ -662,18 +692,36 @@ export default function HospitalManagement() {
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <Label htmlFor="departments">Departments</Label>
-                        <Input
-                          id="departments"
-                          value={formData.departments}
-                          onChange={(e) =>
-                            setFormData((p) => ({
-                              ...p,
-                              departments: e.target.value,
-                            }))
-                          }
-                          placeholder="Cardiology, Orthopedics, Pediatrics"
-                        />
+                        <Label>Departments</Label>
+                        <div className="flex gap-2 mt-1">
+                          <Input
+                            placeholder="Add a department (use commas for multiple)"
+                            value={departmentInput}
+                            onChange={(e) => setDepartmentInput(e.target.value)}
+                          />
+                          <Button type="button" variant="secondary" onClick={addDepartment}>
+                            Add
+                          </Button>
+                        </div>
+                        {departmentItems.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {departmentItems.map((dept) => (
+                              <span
+                                key={dept}
+                                className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-green-50 text-green-700 border border-green-200"
+                              >
+                                {dept}
+                                <button
+                                  type="button"
+                                  onClick={() => removeDepartment(dept)}
+                                  aria-label={`Remove ${dept}`}
+                                >
+                                  <Trash2 className="w-3 h-3 text-red-500" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
