@@ -197,6 +197,55 @@ export default function HospitalManagement() {
     setContactNumbers((prev) => prev.filter((n) => n !== num));
   };
 
+  const openEdit = (hospital: any) => {
+    setEditingHospitalId(hospital.id);
+    setFormData((p) => ({
+      ...p,
+      email: hospital.email || "",
+      password: "",
+      confirmPassword: "",
+      hospital_name: hospital.hospital_name || "",
+      address_lane1: hospital.address || "",
+      address_lane2: "",
+      state: "",
+      district: "",
+      pin_code: "",
+      hospital_type: hospital.hospital_type || "General",
+      license_number: hospital.license_number || "",
+      number_of_ambulances: String(hospital.number_of_ambulances || 0),
+      number_of_beds: String(hospital.number_of_beds || 0),
+      departments: hospital.departments || "",
+      location_enabled: Boolean(hospital.google_map_enabled),
+      location_link: hospital.google_map_link || "",
+    }));
+
+    const phones = (hospital.phone_number || hospital.phoneList || "")
+      .toString()
+      .split(",")
+      .map((p: string) => p.trim())
+      .filter(Boolean);
+    setContactNumbers(phones);
+    if (phones.length > 0) {
+      const first = phones[0];
+      const match = first.match(/^\+(\d{1,3})/);
+      setCountryCode(match ? `+${match[1]}` : "+91");
+    }
+
+    if (hospital.departments) {
+      setDepartmentItems(
+        hospital.departments
+          .toString()
+          .split(",")
+          .map((d: string) => d.trim())
+          .filter(Boolean),
+      );
+    } else {
+      setDepartmentItems([]);
+    }
+
+    setShowCreateForm(true);
+  };
+
   const addDepartment = () => {
     const parts = departmentInput
       .split(",")
