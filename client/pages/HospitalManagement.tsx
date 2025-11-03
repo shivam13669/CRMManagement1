@@ -206,6 +206,33 @@ export default function HospitalManagement() {
 
   const openEdit = (hospital: any) => {
     setEditingHospitalId(hospital.id);
+
+    // Parse state and district from address string
+    let extractedState = "";
+    let extractedDistrict = "";
+    let addressLine1 = hospital.address || "";
+
+    // Try to find state and district in the address
+    if (hospital.address) {
+      const stateNames = statesDistricts.states.map((s) => s.name);
+      for (const state of stateNames) {
+        if (hospital.address.includes(state)) {
+          extractedState = state;
+          // Find the district for this state
+          const stateObj = statesDistricts.states.find((s) => s.name === state);
+          if (stateObj && stateObj.districts) {
+            for (const district of stateObj.districts) {
+              if (hospital.address.includes(district)) {
+                extractedDistrict = district;
+                break;
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+
     setFormData((p) => ({
       ...p,
       email: hospital.email || "",
@@ -214,8 +241,8 @@ export default function HospitalManagement() {
       hospital_name: hospital.hospital_name || "",
       address_lane1: hospital.address || "",
       address_lane2: "",
-      state: "",
-      district: "",
+      state: extractedState,
+      district: extractedDistrict,
       pin_code: "",
       hospital_type: hospital.hospital_type || "General",
       license_number: hospital.license_number || "",
