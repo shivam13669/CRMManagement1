@@ -1031,27 +1031,19 @@ export default function HospitalManagement() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t">
                           <div>
                             <p className="text-xs text-gray-500">Type</p>
-                            <p className="font-semibold text-sm">
-                              {hospital.hospital_type || "N/A"}
-                            </p>
+                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Beds</p>
-                            <p className="font-semibold text-sm">
-                              {hospital.number_of_beds || 0}
-                            </p>
+                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">Ambulances</p>
-                            <p className="font-semibold text-sm">
-                              {hospital.number_of_ambulances || 0}
-                            </p>
+                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-500">License</p>
-                            <p className="font-semibold text-sm">
-                              {hospital.license_number || "N/A"}
-                            </p>
+                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</p>
                           </div>
                         </div>
 
