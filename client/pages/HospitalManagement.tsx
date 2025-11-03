@@ -1028,20 +1028,20 @@ export default function HospitalManagement() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t">
-                          <div>
+                        <div className="flex flex-wrap items-center gap-8 mt-4 pt-4 border-t">
+                          <div className="min-w-[140px]">
                             <p className="text-xs text-gray-500">Type</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</p>
                           </div>
-                          <div>
+                          <div className="min-w-[80px]">
                             <p className="text-xs text-gray-500">Beds</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</p>
                           </div>
-                          <div>
+                          <div className="min-w-[110px]">
                             <p className="text-xs text-gray-500">Ambulances</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</p>
                           </div>
-                          <div>
+                          <div className="min-w-[120px]">
                             <p className="text-xs text-gray-500">License</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</p>
                           </div>
