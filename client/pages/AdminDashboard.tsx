@@ -582,7 +582,7 @@ export default function AdminDashboard() {
                 <span>Recent Feedback</span>
               </CardTitle>
               <CardDescription>
-                Most recent patient feedback or complaint
+                Most recent customer feedback or complaint
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -632,7 +632,7 @@ export default function AdminDashboard() {
                       No feedback received yet
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
-                      The latest patient feedback will appear here
+                      The latest customer feedback will appear here
                     </p>
                   </div>
                 )}

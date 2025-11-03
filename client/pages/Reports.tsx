@@ -273,7 +273,7 @@ export default function Reports() {
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="appointments">Appointments</TabsTrigger>
-            <TabsTrigger value="patients">Patient Analytics</TabsTrigger>
+            <TabsTrigger value="customers">Customer Analytics</TabsTrigger>
             <TabsTrigger value="feedback">Feedback & Complaints</TabsTrigger>
             <TabsTrigger value="financial">Financial</TabsTrigger>
           </TabsList>
@@ -451,12 +451,12 @@ export default function Reports() {
             </div>
           </TabsContent>
 
-          {/* Patient Analytics Tab */}
-          <TabsContent value="patients" className="space-y-6">
+          {/* Customer Analytics Tab */}
+          <TabsContent value="customers" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Patient Demographics</CardTitle>
+                  <CardTitle>Customer Demographics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -515,7 +515,7 @@ export default function Reports() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Patient Satisfaction</CardTitle>
+                  <CardTitle>Customer Satisfaction</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center space-y-4">
@@ -549,7 +549,7 @@ export default function Reports() {
               <CardHeader>
                 <CardTitle>Feedback & Complaint Analysis</CardTitle>
                 <CardDescription>
-                  Detailed breakdown of patient feedback and complaints by category
+                  Detailed breakdown of customer feedback and complaints by category
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -702,7 +702,7 @@ export default function Reports() {
                 className="justify-start"
               >
                 <FileText className="w-4 h-4 mr-2" />
-                Patient Report (PDF)
+                Customer Report (PDF)
               </Button>
               <Button 
                 variant="outline" 

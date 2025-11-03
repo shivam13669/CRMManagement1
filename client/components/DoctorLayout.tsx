@@ -34,7 +34,7 @@ interface Notification {
 
 const sidebarItems = [
   { icon: Activity, label: 'Dashboard', path: '/doctor-dashboard' },
-  { icon: Users, label: 'My Patients', path: '/my-patients' },
+  { icon: Users, label: 'My Customers', path: '/my-customers' },
   { icon: Calendar, label: 'Appointments', path: '/appointments' },
   { icon: FileText, label: 'Medical Reports', path: '/medical-reports' },
   { icon: MessageSquare, label: 'Patient Messages', path: '/patient-messages' },
