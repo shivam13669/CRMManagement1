@@ -1028,7 +1028,7 @@ export default function HospitalManagement() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t">
                           <div>
                             <p className="text-xs text-gray-500">Type</p>
                             <p className="font-semibold text-sm">
