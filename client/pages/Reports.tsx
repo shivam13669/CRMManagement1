@@ -281,7 +281,7 @@ export default function Reports() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Patient & Doctor Growth Chart */}
+              {/* Customer & Doctor Growth Chart */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -289,7 +289,7 @@ export default function Reports() {
                     Growth Trends
                   </CardTitle>
                   <CardDescription>
-                    Patient and doctor registration trends over time
+                    Customer and doctor registration trends over time
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -297,7 +297,7 @@ export default function Reports() {
                     <div className="flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2">
                         <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        Patients
+                        Customers
                       </span>
                       <span className="flex items-center gap-2">
                         <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -306,16 +306,16 @@ export default function Reports() {
                     </div>
                     {/* Simple text-based chart */}
                     <div className="space-y-2">
-                      {patientGrowth.map((item, index) => (
+                      {customerGrowth.map((item, index) => (
                         <div key={index} className="flex items-center justify-between text-sm">
                           <span className="w-12">{item.month}</span>
                           <div className="flex-1 flex items-center gap-4 ml-4">
                             <div className="flex items-center gap-2">
-                              <div 
-                                className="h-2 bg-blue-500 rounded" 
-                                style={{ width: `${(item.patients / 200) * 100}px` }}
+                              <div
+                                className="h-2 bg-blue-500 rounded"
+                                style={{ width: `${(item.customers / 200) * 100}px` }}
                               ></div>
-                              <span className="text-xs text-gray-600">{item.patients}</span>
+                              <span className="text-xs text-gray-600">{item.customers}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <div 
