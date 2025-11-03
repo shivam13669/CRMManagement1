@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  Activity, 
-  Users, 
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  Activity,
+  Users,
   FileText,
   Calendar,
   MessageSquare,
   Settings,
   User,
-  Search, 
-  Bell, 
+  Search,
+  Bell,
   Menu,
   X,
   ChevronDown,
-  LogOut
-} from 'lucide-react';
-import { Button } from './ui/button';
+  LogOut,
+} from "lucide-react";
+import { Button } from "./ui/button";
 
 interface DoctorLayoutProps {
   children: React.ReactNode;
@@ -33,12 +33,12 @@ interface Notification {
 }
 
 const sidebarItems = [
-  { icon: Activity, label: 'Dashboard', path: '/doctor-dashboard' },
-  { icon: Users, label: 'My Customers', path: '/my-customers' },
-  { icon: Calendar, label: 'Appointments', path: '/appointments' },
-  { icon: FileText, label: 'Medical Reports', path: '/medical-reports' },
-  { icon: MessageSquare, label: 'Patient Messages', path: '/patient-messages' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+  { icon: Activity, label: "Dashboard", path: "/doctor-dashboard" },
+  { icon: Users, label: "My Customers", path: "/my-customers" },
+  { icon: Calendar, label: "Appointments", path: "/appointments" },
+  { icon: FileText, label: "Medical Reports", path: "/medical-reports" },
+  { icon: MessageSquare, label: "Patient Messages", path: "/patient-messages" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 export function DoctorLayout({ children }: DoctorLayoutProps) {
@@ -48,7 +48,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const location = useLocation();
-  const userName = localStorage.getItem('userName') || 'Doctor';
+  const userName = localStorage.getItem("userName") || "Doctor";
 
   const [notificationsLoading, setNotificationsLoading] = useState(false);
 
@@ -56,14 +56,14 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
   const fetchNotifications = async () => {
     try {
       setNotificationsLoading(true);
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return;
 
-      const response = await fetch('/api/notifications', {
+      const response = await fetch("/api/notifications", {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
       if (response.ok) {
@@ -71,10 +71,10 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
         setNotifications(data.notifications || []);
         setUnreadCount(data.unreadCount || 0);
       } else {
-        console.error('Failed to fetch notifications:', response.status);
+        console.error("Failed to fetch notifications:", response.status);
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
     } finally {
       setNotificationsLoading(false);
     }
@@ -94,11 +94,16 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'appointment': return <Calendar className="w-4 h-4 text-blue-600" />;
-      case 'customer': return <Users className="w-4 h-4 text-green-600" />;
-      case 'report': return <FileText className="w-4 h-4 text-purple-600" />;
-      case 'message': return <MessageSquare className="w-4 h-4 text-orange-600" />;
-      default: return <Bell className="w-4 h-4 text-gray-600" />;
+      case "appointment":
+        return <Calendar className="w-4 h-4 text-blue-600" />;
+      case "customer":
+        return <Users className="w-4 h-4 text-green-600" />;
+      case "report":
+        return <FileText className="w-4 h-4 text-purple-600" />;
+      case "message":
+        return <MessageSquare className="w-4 h-4 text-orange-600" />;
+      default:
+        return <Bell className="w-4 h-4 text-gray-600" />;
     }
   };
 
@@ -107,21 +112,23 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
     try {
       // Mark notification as read if it's unread
       if (notification.unread) {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem("authToken");
         if (token) {
           await fetch(`/api/notifications/${notification.id}/read`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           });
 
           // Update local state
-          setNotifications(prev =>
-            prev.map(n => n.id === notification.id ? { ...n, unread: false } : n)
+          setNotifications((prev) =>
+            prev.map((n) =>
+              n.id === notification.id ? { ...n, unread: false } : n,
+            ),
           );
-          setUnreadCount(prev => Math.max(0, prev - 1));
+          setUnreadCount((prev) => Math.max(0, prev - 1));
         }
       }
 
@@ -129,66 +136,70 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
       setNotificationsOpen(false);
 
       switch (notification.type) {
-        case 'appointment':
-          window.location.href = '/appointments';
+        case "appointment":
+          window.location.href = "/appointments";
           break;
-        case 'customer':
-          window.location.href = '/my-customers';
+        case "customer":
+          window.location.href = "/my-customers";
           break;
-        case 'report':
-          window.location.href = '/medical-reports';
+        case "report":
+          window.location.href = "/medical-reports";
           break;
-        case 'message':
-          window.location.href = '/customer-messages';
+        case "message":
+          window.location.href = "/customer-messages";
           break;
         default:
-          console.log('Notification clicked:', notification);
+          console.log("Notification clicked:", notification);
       }
     } catch (error) {
-      console.error('Error handling notification click:', error);
+      console.error("Error handling notification click:", error);
     }
   };
 
   // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return;
 
-      const response = await fetch('/api/notifications/mark-all-read', {
-        method: 'POST',
+      const response = await fetch("/api/notifications/mark-all-read", {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
       if (response.ok) {
         // Update local state to mark all as read
-        setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+        setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
         setUnreadCount(0);
       }
     } catch (error) {
-      console.error('Error marking notifications as read:', error);
+      console.error("Error marking notifications as read:", error);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
-    window.location.href = '/login';
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userName");
+    window.location.href = "/login";
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-200 ease-in-out lg:translate-x-0 flex flex-col`}>
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-200 ease-in-out lg:translate-x-0 flex flex-col`}
+      >
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Activity className="w-5 h-5 text-white" />
             </div>
-            <span className="ml-2 text-xl font-bold text-gray-900">ML Support</span>
+            <span className="ml-2 text-xl font-bold text-gray-900">
+              ML Support
+            </span>
           </div>
           <Button
             variant="ghost"
@@ -199,7 +210,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
             <X className="w-5 h-5" />
           </Button>
         </div>
-        
+
         <div className="p-4 border-b border-gray-200 bg-blue-50 flex-shrink-0">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
@@ -211,7 +222,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
             </div>
           </div>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto">
           <nav className="mt-6">
             {sidebarItems.map((item) => {
@@ -222,8 +233,8 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                   to={item.path}
                   className={`flex items-center px-6 py-3 text-sm font-medium transition-colors hover:bg-gray-100 ${
                     isActive
-                      ? 'text-primary bg-primary/10 border-r-2 border-primary'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? "text-primary bg-primary/10 border-r-2 border-primary"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
@@ -246,7 +257,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
@@ -266,7 +277,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
               >
                 <Menu className="w-5 h-5" />
               </Button>
-              
+
               {/* Search bar */}
               <div className="relative hidden md:block">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -290,7 +301,7 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                   <Bell className="w-5 h-5" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-medium">
-                      {unreadCount > 9 ? '9+' : unreadCount}
+                      {unreadCount > 9 ? "9+" : unreadCount}
                     </span>
                   )}
                 </Button>
@@ -303,7 +314,9 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                     />
                     <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-hidden">
                       <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Notifications
+                        </h3>
                         {unreadCount > 0 && (
                           <span className="text-sm text-blue-600 font-medium">
                             {unreadCount} new
@@ -327,9 +340,11 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                             <div
                               key={notification.id}
                               className={`px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${
-                                notification.unread ? 'bg-blue-50' : ''
+                                notification.unread ? "bg-blue-50" : ""
                               }`}
-                              onClick={() => handleNotificationClick(notification)}
+                              onClick={() =>
+                                handleNotificationClick(notification)
+                              }
                             >
                               <div className="flex items-start space-x-3">
                                 <div className="flex-shrink-0 mt-1">
@@ -337,9 +352,13 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center justify-between">
-                                    <p className={`text-sm font-medium text-gray-900 truncate ${
-                                      notification.unread ? 'font-semibold' : ''
-                                    }`}>
+                                    <p
+                                      className={`text-sm font-medium text-gray-900 truncate ${
+                                        notification.unread
+                                          ? "font-semibold"
+                                          : ""
+                                      }`}
+                                    >
                                       {notification.title}
                                     </p>
                                     {notification.unread && (
@@ -394,7 +413,9 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                   <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                     <User className="w-4 h-4 text-white" />
                   </div>
-                  <span className="hidden md:block text-sm font-medium">Dr. {userName}</span>
+                  <span className="hidden md:block text-sm font-medium">
+                    Dr. {userName}
+                  </span>
                   <ChevronDown className="w-4 h-4" />
                 </Button>
 
@@ -405,16 +426,25 @@ export function DoctorLayout({ children }: DoctorLayoutProps) {
                       onClick={() => setProfileDropdownOpen(false)}
                     />
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
-                    <Link to="/doctor-profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      My Profile
-                    </Link>
-                    <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Settings
-                    </Link>
-                    <div className="border-t border-gray-100"></div>
-                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                      Sign out
-                    </button>
+                      <Link
+                        to="/doctor-profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        My Profile
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Settings
+                      </Link>
+                      <div className="border-t border-gray-100"></div>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        Sign out
+                      </button>
                     </div>
                   </>
                 )}

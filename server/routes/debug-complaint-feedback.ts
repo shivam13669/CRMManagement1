@@ -2,7 +2,10 @@ import { RequestHandler } from "express";
 import { db } from "../database";
 
 // Debug endpoint to check complaint feedback data
-export const handleComplaintFeedbackDebug: RequestHandler = async (req, res) => {
+export const handleComplaintFeedbackDebug: RequestHandler = async (
+  req,
+  res,
+) => {
   try {
     console.log("🔍 DEBUG: Checking complaint feedback data...");
 
@@ -52,11 +55,13 @@ export const handleComplaintFeedbackDebug: RequestHandler = async (req, res) => 
     }
 
     // Get closed complaints (those that can be rated)
-    const closedComplaints = allComplaints.filter(c => c.status === 'closed');
+    const closedComplaints = allComplaints.filter((c) => c.status === "closed");
 
     console.log(`📊 Total complaints: ${allComplaints.length}`);
     console.log(`📊 Closed complaints: ${closedComplaints.length}`);
-    console.log(`📊 Complaint feedback records: ${complaintFeedbackData.length}`);
+    console.log(
+      `📊 Complaint feedback records: ${complaintFeedbackData.length}`,
+    );
 
     res.json({
       success: true,
@@ -66,15 +71,14 @@ export const handleComplaintFeedbackDebug: RequestHandler = async (req, res) => 
         complaintFeedbackCount: complaintFeedbackData.length,
         allComplaints,
         closedComplaints,
-        complaintFeedbackData
-      }
+        complaintFeedbackData,
+      },
     });
-
   } catch (error) {
     console.error("❌ Error in complaint feedback debug:", error);
     res.status(500).json({
       error: "Internal server error during debug",
-      details: error instanceof Error ? error.message : String(error)
+      details: error instanceof Error ? error.message : String(error),
     });
   }
 };
