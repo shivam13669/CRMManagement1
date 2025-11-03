@@ -376,7 +376,7 @@ async function runMigrations(): Promise<void> {
       );
 
       if (!hasStatusColumn) {
-        console.log("📝 Adding status column to users table...");
+        console.log("��� Adding status column to users table...");
         db.run(
           "ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'active' CHECK(status IN ('active', 'suspended'))",
         );
@@ -1170,6 +1170,7 @@ export async function suspendUser(userId: number): Promise<boolean> {
   try {
     console.log(`⏸️ Suspending user ID: ${userId}`);
 
+    // Suspend user (do not allow suspending admin)
     db.run(
       `
       UPDATE users
@@ -1178,6 +1179,23 @@ export async function suspendUser(userId: number): Promise<boolean> {
     `,
       [userId],
     );
+
+    // Also suspend corresponding hospital record if one exists for this user
+    try {
+      db.run(
+        `
+        UPDATE hospitals
+        SET status = 'suspended', updated_at = datetime('now')
+        WHERE user_id = ?
+      `,
+        [userId],
+      );
+    } catch (e) {
+      console.warn(
+        `⚠️ Failed to update hospital status for user ${userId}:`,
+        e,
+      );
+    }
 
     console.log(`✅ User ${userId} suspended successfully`);
     saveDatabase();
@@ -1192,6 +1210,7 @@ export async function reactivateUser(userId: number): Promise<boolean> {
   try {
     console.log(`▶️ Reactivating user ID: ${userId}`);
 
+    // Reactivate user (do not allow reactivating admin via this path)
     db.run(
       `
       UPDATE users
@@ -1200,6 +1219,23 @@ export async function reactivateUser(userId: number): Promise<boolean> {
     `,
       [userId],
     );
+
+    // Also reactivate corresponding hospital record if one exists for this user
+    try {
+      db.run(
+        `
+        UPDATE hospitals
+        SET status = 'active', updated_at = datetime('now')
+        WHERE user_id = ?
+      `,
+        [userId],
+      );
+    } catch (e) {
+      console.warn(
+        `⚠️ Failed to update hospital status for user ${userId}:`,
+        e,
+      );
+    }
 
     console.log(`✅ User ${userId} reactivated successfully`);
     saveDatabase();
