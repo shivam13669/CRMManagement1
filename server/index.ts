@@ -89,6 +89,7 @@ import {
   handleGetHospital,
   handleGetAllHospitals,
   handleUpdateHospital,
+  handleAdminUpdateHospital,
 } from "./routes/hospital";
 import { initDatabase } from "./database";
 import { initializeAdmin } from "./admin-init";
