@@ -1028,20 +1028,20 @@ export default function HospitalManagement() {
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap md:flex-nowrap items-start gap-8 mt-4 pt-4 border-t overflow-x-auto">
-                          <div className="flex flex-col flex-none min-w-[140px]">
+                        <div className="flex flex-wrap md:flex-nowrap items-center gap-8 mt-4 pt-4 border-t overflow-x-auto">
+                          <div className="flex items-baseline gap-2 flex-none min-w-[160px]">
                             <p className="text-xs text-gray-500">Type</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</p>
                           </div>
-                          <div className="flex flex-col flex-none min-w-[100px]">
+                          <div className="flex items-baseline gap-2 flex-none min-w-[100px]">
                             <p className="text-xs text-gray-500">Beds</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</p>
                           </div>
-                          <div className="flex flex-col flex-none min-w-[120px]">
+                          <div className="flex items-baseline gap-2 flex-none min-w-[120px]">
                             <p className="text-xs text-gray-500">Ambulances</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</p>
                           </div>
-                          <div className="flex flex-col flex-none min-w-[120px]">
+                          <div className="flex items-baseline gap-2 flex-none min-w-[120px]">
                             <p className="text-xs text-gray-500">License</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</p>
                           </div>
