@@ -1,9 +1,12 @@
-import initSqlJs from "sql.js";
-import { readFileSync, writeFileSync } from "fs";
-import { join } from "path";
+const initSqlJs = require("sql.js");
+const { readFileSync, writeFileSync } = require("fs");
+const { join } = require("path");
 
 const DB_PATH = join(process.cwd(), "healthcare.db");
-const statesDistrictsPath = join(process.cwd(), "shared/india-states-districts.json");
+const statesDistrictsPath = join(
+  process.cwd(),
+  "shared/india-states-districts.json",
+);
 
 let SQL;
 let db;
@@ -20,7 +23,9 @@ async function migrateHospitalAddresses() {
     db = new SQL.Database(data);
 
     // Load states and districts
-    const statesDistricts = JSON.parse(readFileSync(statesDistrictsPath, "utf-8"));
+    const statesDistricts = JSON.parse(
+      readFileSync(statesDistrictsPath, "utf-8"),
+    );
     const districts = new Set();
     const stateMap = {};
 
