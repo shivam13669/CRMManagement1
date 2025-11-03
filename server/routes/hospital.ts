@@ -313,3 +313,39 @@ export const handleUpdateHospital: RequestHandler = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Admin update by hospital id
+export const handleAdminUpdateHospital: RequestHandler = async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const hospitalId = parseInt(req.params.id, 10);
+    const updates: UpdateHospitalRequest = req.body;
+    if (Number.isNaN(hospitalId)) {
+      return res.status(400).json({ error: "Invalid hospital id" });
+    }
+
+    // Find hospital by id
+    const hospital = getHospitalById(hospitalId);
+    if (!hospital) {
+      return res.status(404).json({ error: "Hospital not found" });
+    }
+
+    // Use existing update logic but target by user_id
+    const success = updateHospital(hospital.user_id, updates as any);
+    if (!success) {
+      return res
+        .status(400)
+        .json({ error: "No updates provided or hospital not updated" });
+    }
+
+    const updated = getHospitalById(hospitalId);
+    res.json({ message: "Hospital updated by admin", hospital: updated });
+  } catch (error) {
+    console.error("❌ Error in admin update hospital:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
