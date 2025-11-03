@@ -530,7 +530,35 @@ export default function HospitalManagement() {
             </Button>
             <Dialog open={showCreateForm} onOpenChange={(open) => { setShowCreateForm(open); if (!open) setEditingHospitalId(null); }}>
               <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
+                <Button
+                  className="w-full sm:w-auto"
+                  onClick={() => {
+                    setEditingHospitalId(null);
+                    setFormData({
+                      email: "",
+                      password: "",
+                      confirmPassword: "",
+                      hospital_name: "",
+                      address_lane1: "",
+                      address_lane2: "",
+                      state: "",
+                      district: "",
+                      pin_code: "",
+                      hospital_type: "General",
+                      license_number: "",
+                      number_of_ambulances: "0",
+                      number_of_beds: "0",
+                      departments: "",
+                      location_enabled: false,
+                      location_link: "",
+                    });
+                    setCountryCode("+91");
+                    setContactNumbers([]);
+                    setContactNumberInput("");
+                    setDepartmentItems([]);
+                    setDepartmentInput("");
+                  }}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Hospital
                 </Button>
