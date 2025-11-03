@@ -65,7 +65,9 @@ interface HospitalItem {
 export default function HospitalManagement() {
   const { toast } = useToast();
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingHospitalId, setEditingHospitalId] = useState<number | null>(null);
+  const [editingHospitalId, setEditingHospitalId] = useState<number | null>(
+    null,
+  );
   const [hospitals, setHospitals] = useState<HospitalItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -105,23 +107,28 @@ export default function HospitalManagement() {
       try {
         const container = document.getElementById("hospital-list");
         if (!container) return;
-        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
-          acceptNode: (node) => {
-            if (node.nodeValue && node.nodeValue.trim() === "0") {
-              const parent = node.parentElement;
-              // keep if value rendered inside expected value elements
-              if (
-                parent &&
-                parent.classList &&
-                (parent.classList.contains("font-semibold") || parent.classList.contains("px-2") )
-              ) {
-                return NodeFilter.FILTER_REJECT;
+        const walker = document.createTreeWalker(
+          container,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: (node) => {
+              if (node.nodeValue && node.nodeValue.trim() === "0") {
+                const parent = node.parentElement;
+                // keep if value rendered inside expected value elements
+                if (
+                  parent &&
+                  parent.classList &&
+                  (parent.classList.contains("font-semibold") ||
+                    parent.classList.contains("px-2"))
+                ) {
+                  return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
               }
-              return NodeFilter.FILTER_ACCEPT;
-            }
-            return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_REJECT;
+            },
           },
-        });
+        );
         const nodes: Text[] = [];
         let n: Text | null = walker.nextNode() as Text | null;
         while (n) {
@@ -307,34 +314,53 @@ export default function HospitalManagement() {
 
       if (editingHospitalId) {
         // Admin update
-        const address = `${formData.address_lane1} ${formData.address_lane2 || ""} ${formData.state || ""} ${formData.district || ""} ${formData.pin_code || ""}`.trim();
-        const response = await fetch(`/api/admin/hospitals/${editingHospitalId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const address =
+          `${formData.address_lane1} ${formData.address_lane2 || ""} ${formData.state || ""} ${formData.district || ""} ${formData.pin_code || ""}`.trim();
+        const response = await fetch(
+          `/api/admin/hospitals/${editingHospitalId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              hospital_name: formData.hospital_name,
+              address,
+              phone_number: contactNumbers.join(","),
+              hospital_type: formData.hospital_type,
+              license_number: formData.license_number || undefined,
+              number_of_ambulances: parseInt(
+                formData.number_of_ambulances || "0",
+                10,
+              ),
+              number_of_beds: parseInt(formData.number_of_beds || "0", 10),
+              departments: departmentItems.length
+                ? departmentItems.join(",")
+                : undefined,
+              google_map_enabled: formData.location_enabled,
+              google_map_link: formData.location_enabled
+                ? formData.location_link
+                : undefined,
+            }),
           },
-          body: JSON.stringify({
-            hospital_name: formData.hospital_name,
-            address,
-            phone_number: contactNumbers.join(","),
-            hospital_type: formData.hospital_type,
-            license_number: formData.license_number || undefined,
-            number_of_ambulances: parseInt(formData.number_of_ambulances || "0", 10),
-            number_of_beds: parseInt(formData.number_of_beds || "0", 10),
-            departments: departmentItems.length ? departmentItems.join(",") : undefined,
-            google_map_enabled: formData.location_enabled,
-            google_map_link: formData.location_enabled ? formData.location_link : undefined,
-          }),
-        });
+        );
 
         const data = await response.json();
         if (!response.ok) {
-          toast({ title: "Error", description: data.error || data.message || "Failed to update hospital", variant: "destructive" });
+          toast({
+            title: "Error",
+            description:
+              data.error || data.message || "Failed to update hospital",
+            variant: "destructive",
+          });
           return;
         }
 
-        toast({ title: "Hospital updated", description: `\"${formData.hospital_name}\" updated successfully!` });
+        toast({
+          title: "Hospital updated",
+          description: `\"${formData.hospital_name}\" updated successfully!`,
+        });
         setEditingHospitalId(null);
         setShowCreateForm(false);
         fetchHospitals();
@@ -528,7 +554,13 @@ export default function HospitalManagement() {
               <Download className="w-4 h-4 mr-2" />
               Export List
             </Button>
-            <Dialog open={showCreateForm} onOpenChange={(open) => { setShowCreateForm(open); if (!open) setEditingHospitalId(null); }}>
+            <Dialog
+              open={showCreateForm}
+              onOpenChange={(open) => {
+                setShowCreateForm(open);
+                if (!open) setEditingHospitalId(null);
+              }}
+            >
               <DialogTrigger asChild>
                 <Button
                   className="w-full sm:w-auto"
@@ -565,7 +597,9 @@ export default function HospitalManagement() {
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>{editingHospitalId ? "Edit Hospital" : "Add New Hospital"}</DialogTitle>
+                  <DialogTitle>
+                    {editingHospitalId ? "Edit Hospital" : "Add New Hospital"}
+                  </DialogTitle>
                   <DialogDescription>
                     Admin-only creation. The hospital will log in using the
                     email and password you set here.
@@ -984,7 +1018,13 @@ export default function HospitalManagement() {
                       disabled={loading}
                       className="min-w-[120px]"
                     >
-                      {editingHospitalId ? (loading ? "Updating..." : "Update Hospital") : (loading ? "Creating..." : "Create Hospital")}
+                      {editingHospitalId
+                        ? loading
+                          ? "Updating..."
+                          : "Update Hospital"
+                        : loading
+                          ? "Creating..."
+                          : "Create Hospital"}
                     </Button>
                   </div>
                 </form>
@@ -1200,19 +1240,31 @@ export default function HospitalManagement() {
                         <div className="flex flex-wrap md:flex-nowrap items-center gap-8 mt-4 pt-4 border-t overflow-x-auto">
                           <div className="flex items-center gap-2 flex-none min-w-[160px]">
                             <span className="text-xs text-gray-500">Type:</span>
-                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
+                              {hospital.hospital_type || "N/A"}
+                            </span>
                           </div>
                           <div className="flex flex-col gap-1 items-start flex-none min-w-[100px]">
                             <span className="text-xs text-gray-500">Beds</span>
-                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
+                              {hospital.number_of_beds || 0}
+                            </span>
                           </div>
                           <div className="flex flex-col gap-1 items-start flex-none min-w-[120px]">
-                            <span className="text-xs text-gray-500">Ambulances</span>
-                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</span>
+                            <span className="text-xs text-gray-500">
+                              Ambulances
+                            </span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
+                              {hospital.number_of_ambulances || 0}
+                            </span>
                           </div>
                           <div className="flex flex-col gap-1 items-start flex-none min-w-[120px]">
-                            <span className="text-xs text-gray-500">License/Reg. Number</span>
-                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</span>
+                            <span className="text-xs text-gray-500">
+                              License/Reg. Number
+                            </span>
+                            <span className="font-semibold text-sm whitespace-nowrap">
+                              {hospital.license_number || "N/A"}
+                            </span>
                           </div>
                         </div>
 

@@ -1395,7 +1395,12 @@ export function getHospitalById(hospitalId: number): any | undefined {
       [hospitalId],
     );
 
-    if (!result || result.length === 0 || !result[0] || result[0].values.length === 0) {
+    if (
+      !result ||
+      result.length === 0 ||
+      !result[0] ||
+      result[0].values.length === 0
+    ) {
       return undefined;
     }
 
