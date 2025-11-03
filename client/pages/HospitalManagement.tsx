@@ -956,7 +956,7 @@ export default function HospitalManagement() {
                       disabled={loading}
                       className="min-w-[120px]"
                     >
-                      {loading ? "Creating..." : "Create Hospital"}
+                      {editingHospitalId ? (loading ? "Updating..." : "Update Hospital") : (loading ? "Creating..." : "Create Hospital")}
                     </Button>
                   </div>
                 </form>
