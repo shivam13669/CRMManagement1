@@ -1237,17 +1237,18 @@ export default function HospitalManagement() {
                       </div>
 
                       <div className="flex flex-col gap-2 items-end">
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => openEdit(hospital)}
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </Button>
-                        </div>
                         <p className="text-xs text-gray-500">Admin Email</p>
                         <p className="text-sm font-medium">{hospital.email}</p>
+                      </div>
+
+                      <div className="absolute right-4 bottom-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEdit(hospital)}
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
