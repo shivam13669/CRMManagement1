@@ -272,29 +272,76 @@ export default function HospitalManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      toast({ title: "Passwords do not match", variant: "destructive" });
-      return;
-    }
 
-    if (
-      !formData.email ||
-      !formData.password ||
-      !formData.hospital_name ||
-      !formData.address_lane1 ||
-      !formData.state ||
-      !formData.district
-    ) {
-      toast({
-        title: "Please fill all required fields",
-        variant: "destructive",
-      });
-      return;
+    // If editing, password is optional
+    if (!editingHospitalId) {
+      if (formData.password !== formData.confirmPassword) {
+        toast({ title: "Passwords do not match", variant: "destructive" });
+        return;
+      }
+
+      if (
+        !formData.email ||
+        !formData.password ||
+        !formData.hospital_name ||
+        !formData.address_lane1 ||
+        !formData.state ||
+        !formData.district
+      ) {
+        toast({
+          title: "Please fill all required fields",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      if (!formData.hospital_name || !formData.address_lane1) {
+        toast({ title: "Please fill required fields", variant: "destructive" });
+        return;
+      }
     }
 
     try {
       setLoading(true);
       const token = localStorage.getItem("authToken");
+
+      if (editingHospitalId) {
+        // Admin update
+        const address = `${formData.address_lane1} ${formData.address_lane2 || ""} ${formData.state || ""} ${formData.district || ""} ${formData.pin_code || ""}`.trim();
+        const response = await fetch(`/api/admin/hospitals/${editingHospitalId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            hospital_name: formData.hospital_name,
+            address,
+            phone_number: contactNumbers.join(","),
+            hospital_type: formData.hospital_type,
+            license_number: formData.license_number || undefined,
+            number_of_ambulances: parseInt(formData.number_of_ambulances || "0", 10),
+            number_of_beds: parseInt(formData.number_of_beds || "0", 10),
+            departments: departmentItems.length ? departmentItems.join(",") : undefined,
+            google_map_enabled: formData.location_enabled,
+            google_map_link: formData.location_enabled ? formData.location_link : undefined,
+          }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          toast({ title: "Error", description: data.error || data.message || "Failed to update hospital", variant: "destructive" });
+          return;
+        }
+
+        toast({ title: "Hospital updated", description: `\"${formData.hospital_name}\" updated successfully!` });
+        setEditingHospitalId(null);
+        setShowCreateForm(false);
+        fetchHospitals();
+        return;
+      }
+
+      // Create new hospital
       const response = await fetch("/api/admin/hospitals/create", {
         method: "POST",
         headers: {
