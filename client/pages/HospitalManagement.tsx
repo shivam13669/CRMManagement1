@@ -722,7 +722,11 @@ export default function HospitalManagement() {
                             value={departmentInput}
                             onChange={(e) => setDepartmentInput(e.target.value)}
                           />
-                          <Button type="button" variant="secondary" onClick={addDepartment}>
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={addDepartment}
+                          >
                             Add
                           </Button>
                         </div>

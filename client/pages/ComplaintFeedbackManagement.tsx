@@ -34,27 +34,29 @@ export default function ComplaintFeedbackManagement() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('🚀 ComplaintFeedbackManagement component mounted, fetching data...');
+    console.log(
+      "🚀 ComplaintFeedbackManagement component mounted, fetching data...",
+    );
     fetchComplaintFeedback();
   }, []);
 
   const fetchComplaintFeedback = async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
-      const response = await fetch('/api/admin/complaint-feedback', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await fetch("/api/admin/complaint-feedback", {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.status === 401 || response.status === 403) {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('userName');
-        window.location.href = '/login';
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userName");
+        window.location.href = "/login";
         return;
       }
 
@@ -62,22 +64,29 @@ export default function ComplaintFeedbackManagement() {
       try {
         data = await response.json();
       } catch (e) {
-        console.error('❌ Failed to parse response:', e);
+        console.error("❌ Failed to parse response:", e);
         data = { feedback: [] };
       }
 
       if (response.ok) {
-        console.log('🔍 Complaint feedback data received:', data);
-        console.log('📊 Feedback array:', data.feedback);
-        console.log('📊 Feedback count:', data.feedback?.length);
+        console.log("🔍 Complaint feedback data received:", data);
+        console.log("📊 Feedback array:", data.feedback);
+        console.log("📊 Feedback count:", data.feedback?.length);
         setFeedback(data.feedback);
       } else {
-        console.error('❌ Failed to fetch complaint feedback:', response.status, response.statusText);
-        console.error('❌ Error details:', data.error || data.message || 'Unknown error');
+        console.error(
+          "❌ Failed to fetch complaint feedback:",
+          response.status,
+          response.statusText,
+        );
+        console.error(
+          "❌ Error details:",
+          data.error || data.message || "Unknown error",
+        );
       }
     } catch (error) {
-      console.error('❌ Error fetching complaint feedback:', error);
-      console.error('❌ Error stack:', error);
+      console.error("❌ Error fetching complaint feedback:", error);
+      console.error("❌ Error stack:", error);
     } finally {
       setLoading(false);
     }
@@ -89,16 +98,19 @@ export default function ComplaintFeedbackManagement() {
     return "text-red-600";
   };
 
-  const averageRating = feedback.length > 0 
-    ? (feedback.reduce((sum, item) => sum + item.rating, 0) / feedback.length).toFixed(1)
-    : "0";
+  const averageRating =
+    feedback.length > 0
+      ? (
+          feedback.reduce((sum, item) => sum + item.rating, 0) / feedback.length
+        ).toFixed(1)
+      : "0";
 
   const ratingDistribution = {
-    5: feedback.filter(f => f.rating === 5).length,
-    4: feedback.filter(f => f.rating === 4).length,
-    3: feedback.filter(f => f.rating === 3).length,
-    2: feedback.filter(f => f.rating === 2).length,
-    1: feedback.filter(f => f.rating === 1).length,
+    5: feedback.filter((f) => f.rating === 5).length,
+    4: feedback.filter((f) => f.rating === 4).length,
+    3: feedback.filter((f) => f.rating === 3).length,
+    2: feedback.filter((f) => f.rating === 2).length,
+    1: feedback.filter((f) => f.rating === 1).length,
   };
 
   if (loading) {
@@ -116,7 +128,9 @@ export default function ComplaintFeedbackManagement() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Complaint Response Feedback</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Complaint Response Feedback
+          </h1>
           <p className="text-gray-600 mt-2">
             Patient feedback on how well complaints were handled
           </p>
@@ -131,7 +145,9 @@ export default function ComplaintFeedbackManagement() {
                   <MessageSquare className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">{feedback.length}</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {feedback.length}
+                  </div>
                   <div className="text-sm text-gray-600">Total Feedback</div>
                 </div>
               </div>
@@ -145,7 +161,9 @@ export default function ComplaintFeedbackManagement() {
                   <Star className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-gray-900">{averageRating}</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    {averageRating}
+                  </div>
                   <div className="text-sm text-gray-600">Average Rating</div>
                 </div>
               </div>
@@ -176,7 +194,14 @@ export default function ComplaintFeedbackManagement() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-gray-900">
-                    {feedback.length > 0 ? Math.round(((ratingDistribution[4] + ratingDistribution[5]) / feedback.length) * 100) : 0}%
+                    {feedback.length > 0
+                      ? Math.round(
+                          ((ratingDistribution[4] + ratingDistribution[5]) /
+                            feedback.length) *
+                            100,
+                        )
+                      : 0}
+                    %
                   </div>
                   <div className="text-sm text-gray-600">Satisfaction</div>
                 </div>
@@ -208,7 +233,11 @@ export default function ComplaintFeedbackManagement() {
                     ></div>
                   </div>
                   <span className="text-sm text-gray-600 w-12 text-right">
-                    {ratingDistribution[rating as keyof typeof ratingDistribution]}
+                    {
+                      ratingDistribution[
+                        rating as keyof typeof ratingDistribution
+                      ]
+                    }
                   </span>
                 </div>
               ))}
@@ -235,9 +264,7 @@ export default function ComplaintFeedbackManagement() {
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="outline">
-                            Complaint Feedback
-                          </Badge>
+                          <Badge variant="outline">Complaint Feedback</Badge>
                           <div className="flex space-x-1">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
@@ -250,26 +277,32 @@ export default function ComplaintFeedbackManagement() {
                               />
                             ))}
                           </div>
-                          <span className={`text-sm font-medium ${getRatingColor(item.rating)}`}>
+                          <span
+                            className={`text-sm font-medium ${getRatingColor(item.rating)}`}
+                          >
                             {item.rating}/5
                           </span>
                         </div>
-                        
+
                         <h3 className="font-medium text-gray-900 mb-2">
                           Complaint: {item.complaint_subject}
                         </h3>
-                        
+
                         {item.feedback_text && (
                           <p className="text-sm text-gray-600 mb-3">
                             "{item.feedback_text}"
                           </p>
                         )}
-                        
+
                         <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                          <h4 className="text-sm font-medium text-gray-900 mb-1">Our Response:</h4>
-                          <p className="text-sm text-gray-700">{item.admin_response}</p>
+                          <h4 className="text-sm font-medium text-gray-900 mb-1">
+                            Our Response:
+                          </h4>
+                          <p className="text-sm text-gray-700">
+                            {item.admin_response}
+                          </p>
                         </div>
-                        
+
                         <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
                           <div className="flex items-center gap-1">
                             <User className="w-3 h-3" />
