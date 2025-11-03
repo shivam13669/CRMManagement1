@@ -1412,6 +1412,17 @@ export function getHospitalByUserId(userId: number): any | undefined {
       hospital[col] = row[index];
     });
 
+    // Parse address to extract state and district if they're empty
+    if ((!hospital.state || !hospital.district) && hospital.address) {
+      const parsed = parseAddressForStateDistrict(hospital.address);
+      if (!hospital.state && parsed.state) {
+        hospital.state = parsed.state;
+      }
+      if (!hospital.district && parsed.district) {
+        hospital.district = parsed.district;
+      }
+    }
+
     return hospital;
   } catch (error) {
     console.error("❌ Error getting hospital by user ID:", error);
