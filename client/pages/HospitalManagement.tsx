@@ -235,12 +235,12 @@ export default function HospitalManagement() {
         }),
       });
 
-      const text = await response.text();
       let data: any = {};
       try {
-        data = text ? JSON.parse(text) : {};
+        data = await response.json();
       } catch (e) {
-        data = { message: text };
+        console.error("Failed to parse response as JSON:", e);
+        data = { message: "Invalid server response" };
       }
 
       if (!response.ok) {
