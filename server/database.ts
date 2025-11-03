@@ -979,7 +979,7 @@ export async function createPendingRegistration(
 
     saveDatabase();
     console.log(
-      `��� Pending registration created: ${registration.email} - ID: ${pendingId}`,
+      `✅ Pending registration created: ${registration.email} - ID: ${pendingId}`,
     );
 
     return pendingId as number;
@@ -1547,7 +1547,7 @@ function parseAddressForStateDistrict(address: string): {
       }
     });
 
-    // Parse address parts
+    // Parse address - split by comma first, then by space to get individual words
     const addressParts = address.split(",").map((part) => part.trim());
 
     let extractedState: string | null = null;
@@ -1556,14 +1556,34 @@ function parseAddressForStateDistrict(address: string): {
     for (const part of addressParts) {
       const lowerPart = part.toLowerCase();
 
-      // Check for state
+      // Check if the entire part is a state (exact match)
       if (stateMap[lowerPart]) {
         extractedState = stateMap[lowerPart];
+      } else {
+        // Split by space and check each word for state
+        const words = part.split(/\s+/);
+        for (const word of words) {
+          const lowerWord = word.toLowerCase();
+          if (stateMap[lowerWord]) {
+            extractedState = stateMap[lowerWord];
+            break;
+          }
+        }
       }
 
-      // Check for district
+      // Check if the entire part is a district (exact match)
       if (districtMap[lowerPart]) {
         extractedDistrict = districtMap[lowerPart];
+      } else {
+        // Split by space and check each word for district
+        const words = part.split(/\s+/);
+        for (const word of words) {
+          const lowerWord = word.toLowerCase();
+          if (districtMap[lowerWord]) {
+            extractedDistrict = districtMap[lowerWord];
+            break;
+          }
+        }
       }
     }
 
