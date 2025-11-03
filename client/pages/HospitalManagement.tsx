@@ -1072,21 +1072,21 @@ export default function HospitalManagement() {
                         </div>
 
                         <div className="flex flex-wrap md:flex-nowrap items-center gap-8 mt-4 pt-4 border-t overflow-x-auto">
-                          <div className="flex items-baseline gap-2 flex-none min-w-[160px]">
-                            <p className="text-xs text-gray-500">Type</p>
-                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</p>
+                          <div className="flex items-center gap-2 flex-none min-w-[160px]">
+                            <span className="text-xs text-gray-500">Type:</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</span>
                           </div>
-                          <div className="flex items-baseline gap-2 flex-none min-w-[100px]">
-                            <p className="text-xs text-gray-500">Beds</p>
-                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</p>
+                          <div className="flex items-center gap-2 flex-none min-w-[100px]">
+                            <span className="text-xs text-gray-500">Beds:</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</span>
                           </div>
-                          <div className="flex items-baseline gap-2 flex-none min-w-[120px]">
-                            <p className="text-xs text-gray-500">Ambulances</p>
-                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</p>
+                          <div className="flex items-center gap-2 flex-none min-w-[120px]">
+                            <span className="text-xs text-gray-500">Ambulances:</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</span>
                           </div>
-                          <div className="flex items-baseline gap-2 flex-none min-w-[120px]">
-                            <p className="text-xs text-gray-500">License/Reg. Number</p>
-                            <p className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</p>
+                          <div className="flex items-center gap-2 flex-none min-w-[120px]">
+                            <span className="text-xs text-gray-500">License/Reg. Number:</span>
+                            <span className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</span>
                           </div>
                         </div>
 
