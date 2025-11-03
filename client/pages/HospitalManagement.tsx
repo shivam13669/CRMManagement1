@@ -40,6 +40,7 @@ import {
   TrendingUp,
   Calendar,
   Ambulance,
+  Edit3,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
