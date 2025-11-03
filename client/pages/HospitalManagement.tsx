@@ -97,6 +97,49 @@ export default function HospitalManagement() {
     fetchHospitals();
   }, []);
 
+  // Cleanup stray text nodes (some rendering environments can inject orphaned text nodes like "0")
+  useEffect(() => {
+    const cleanup = () => {
+      try {
+        const container = document.getElementById("hospital-list");
+        if (!container) return;
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+          acceptNode: (node) => {
+            if (node.nodeValue && node.nodeValue.trim() === "0") {
+              const parent = node.parentElement;
+              // keep if value rendered inside expected value elements
+              if (
+                parent &&
+                parent.classList &&
+                (parent.classList.contains("font-semibold") || parent.classList.contains("px-2") )
+              ) {
+                return NodeFilter.FILTER_REJECT;
+              }
+              return NodeFilter.FILTER_ACCEPT;
+            }
+            return NodeFilter.FILTER_REJECT;
+          },
+        });
+        const nodes: Text[] = [];
+        let n: Text | null = walker.nextNode() as Text | null;
+        while (n) {
+          nodes.push(n);
+          n = walker.nextNode() as Text | null;
+        }
+        for (const t of nodes) {
+          if (t.parentNode) t.parentNode.removeChild(t);
+        }
+      } catch (e) {
+        // silent
+      }
+    };
+
+    // run once after mount and after hospitals change
+    cleanup();
+    const id = setInterval(cleanup, 500);
+    return () => clearInterval(id);
+  }, [hospitals]);
+
   const fetchHospitals = async () => {
     try {
       setLoading(true);
