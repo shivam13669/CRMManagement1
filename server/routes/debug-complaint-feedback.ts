@@ -8,8 +8,8 @@ export const handleComplaintFeedbackDebug: RequestHandler = async (req, res) => 
 
     // Get all complaints
     const complaintsResult = db.exec(`
-      SELECT id, type, subject, status, patient_user_id, admin_response
-      FROM feedback_complaints 
+      SELECT id, type, subject, status, customer_user_id, admin_response
+      FROM feedback_complaints
       ORDER BY created_at DESC
     `);
 
@@ -27,14 +27,14 @@ export const handleComplaintFeedbackDebug: RequestHandler = async (req, res) => 
 
     // Get all complaint feedback
     const feedbackResult = db.exec(`
-      SELECT 
+      SELECT
         cf.*,
-        u.full_name as patient_name,
+        u.full_name as customer_name,
         fc.subject as complaint_subject,
         fc.status as complaint_status,
         fc.admin_response
       FROM complaint_feedback cf
-      JOIN users u ON cf.patient_user_id = u.id
+      JOIN users u ON cf.customer_user_id = u.id
       JOIN feedback_complaints fc ON cf.complaint_id = fc.id
       ORDER BY cf.created_at DESC
     `);
