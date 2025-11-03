@@ -1028,7 +1028,7 @@ export default function HospitalManagement() {
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap items-start gap-8 mt-4 pt-4 border-t">
+                        <div className="flex flex-wrap md:flex-nowrap items-start gap-8 mt-4 pt-4 border-t overflow-x-auto">
                           <div className="flex flex-col flex-none min-w-[140px]">
                             <p className="text-xs text-gray-500">Type</p>
                             <p className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</p>
