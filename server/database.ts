@@ -1474,6 +1474,18 @@ export function getAllHospitals(): any[] {
       columns.forEach((col, index) => {
         hospital[col] = row[index];
       });
+
+      // Parse address to extract state and district if they're empty
+      if ((!hospital.state || !hospital.district) && hospital.address) {
+        const parsed = parseAddressForStateDistrict(hospital.address);
+        if (!hospital.state && parsed.state) {
+          hospital.state = parsed.state;
+        }
+        if (!hospital.district && parsed.district) {
+          hospital.district = parsed.district;
+        }
+      }
+
       return hospital;
     });
 
@@ -1482,6 +1494,67 @@ export function getAllHospitals(): any[] {
   } catch (error) {
     console.error("❌ Error getting hospitals:", error);
     return [];
+  }
+}
+
+function parseAddressForStateDistrict(address: string): {
+  state: string | null;
+  district: string | null;
+} {
+  try {
+    // Load states and districts data
+    const statesDistrictsPath = require("path").join(
+      process.cwd(),
+      "shared/india-states-districts.json",
+    );
+    const statesDistrictsData = require("fs").readFileSync(
+      statesDistrictsPath,
+      "utf-8",
+    );
+    const statesDistricts = JSON.parse(statesDistrictsData);
+
+    // Build lookup maps
+    const stateMap: Record<string, string> = {};
+    const districtMap: Record<string, string> = {};
+
+    statesDistricts.states.forEach((state: any) => {
+      stateMap[state.name.toLowerCase()] = state.name;
+      if (Array.isArray(state.districts)) {
+        state.districts.forEach((district: string) => {
+          if (district) {
+            districtMap[district.toLowerCase()] = district;
+          }
+        });
+      }
+    });
+
+    // Parse address parts
+    const addressParts = address.split(",").map((part) => part.trim());
+
+    let extractedState: string | null = null;
+    let extractedDistrict: string | null = null;
+
+    for (const part of addressParts) {
+      const lowerPart = part.toLowerCase();
+
+      // Check for state
+      if (stateMap[lowerPart]) {
+        extractedState = stateMap[lowerPart];
+      }
+
+      // Check for district
+      if (districtMap[lowerPart]) {
+        extractedDistrict = districtMap[lowerPart];
+      }
+    }
+
+    return {
+      state: extractedState,
+      district: extractedDistrict,
+    };
+  } catch (error) {
+    console.error("⚠️ Error parsing address:", error);
+    return { state: null, district: null };
   }
 }
 
