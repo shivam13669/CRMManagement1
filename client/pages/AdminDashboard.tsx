@@ -322,50 +322,50 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        {/* First Row - Patients, Doctors, Staff */}
+        {/* First Row - Customers, Doctors, Staff */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-          {/* Recent Patients */}
+          {/* Recent Customers */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-5 w-5" />
-                <span>Recent Patients</span>
+                <span>Recent Customers</span>
               </CardTitle>
-              <CardDescription>Newly registered patients</CardDescription>
+              <CardDescription>Newly registered customers</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {recentPatients.length > 0 ? (
-                  recentPatients.map((patient, index) => (
+                  recentPatients.map((customer, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
                     >
                       <div className="flex-1">
                         <div className="font-medium text-gray-900">
-                          {patient.full_name}
+                          {customer.full_name}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {patient.email}
+                          {customer.email}
                         </div>
                       </div>
                       <div className="text-xs text-gray-400">
-                        {new Date(patient.created_at).toLocaleDateString()}
+                        {new Date(customer.created_at).toLocaleDateString()}
                       </div>
                     </div>
                   ))
                 ) : (
                   <p className="text-sm text-gray-500 text-center py-4">
-                    No patients registered yet
+                    No customers registered yet
                   </p>
                 )}
               </div>
               <div className="mt-4 text-center">
                 <button
                   className="text-primary hover:text-primary/80 font-medium text-sm"
-                  onClick={() => navigate("/patients")}
+                  onClick={() => navigate("/customers")}
                 >
-                  View all patients →
+                  View all customers →
                 </button>
               </div>
             </CardContent>
