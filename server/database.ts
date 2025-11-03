@@ -1501,6 +1501,26 @@ export function updateHospital(
       updateFields.push("address = ?");
       values.push(updates.address);
     }
+    if (updates.address_lane1) {
+      updateFields.push("address_lane1 = ?");
+      values.push(updates.address_lane1);
+    }
+    if (updates.address_lane2 !== undefined) {
+      updateFields.push("address_lane2 = ?");
+      values.push(updates.address_lane2 || null);
+    }
+    if (updates.state) {
+      updateFields.push("state = ?");
+      values.push(updates.state);
+    }
+    if (updates.district) {
+      updateFields.push("district = ?");
+      values.push(updates.district);
+    }
+    if (updates.pin_code) {
+      updateFields.push("pin_code = ?");
+      values.push(updates.pin_code);
+    }
     if (updates.phone_number) {
       updateFields.push("phone_number = ?");
       values.push(updates.phone_number);
