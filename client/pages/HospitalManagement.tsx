@@ -1156,7 +1156,7 @@ export default function HospitalManagement() {
                   key={hospital.id}
                   className="hover:shadow-md transition-shadow"
                 >
-                  <CardContent className="pt-6">
+                  <CardContent className="pt-6 relative">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                       <div className="flex-1 text-[0px]">
                         <div className="flex items-center gap-2 mb-2">
