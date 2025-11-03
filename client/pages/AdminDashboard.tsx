@@ -674,7 +674,7 @@ export default function AdminDashboard() {
                 <div className="text-2xl font-bold text-primary">
                   {data?.customers.length || 0}
                 </div>
-                <div className="text-sm text-gray-500">Total Patients</div>
+                <div className="text-sm text-gray-500">Total Customers</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-secondary">

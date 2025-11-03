@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 interface DashboardStats {
-  totalPatients: number;
+  totalCustomers: number;
   totalDoctors: number;
   totalAppointments: number;
   totalComplaints: number;
@@ -41,9 +41,9 @@ interface DashboardStats {
   pendingRegistrations: number;
 }
 
-interface PatientGrowth {
+interface CustomerGrowth {
   month: string;
-  patients: number;
+  customers: number;
   doctors: number;
 }
 
@@ -71,13 +71,13 @@ export default function Reports() {
   const [refreshing, setRefreshing] = useState(false);
 
   // Mock data - In a real app, this would come from APIs
-  const patientGrowth: PatientGrowth[] = [
-    { month: "Jan", patients: 120, doctors: 15 },
-    { month: "Feb", patients: 135, doctors: 16 },
-    { month: "Mar", patients: 148, doctors: 18 },
-    { month: "Apr", patients: 162, doctors: 19 },
-    { month: "May", patients: 178, doctors: 20 },
-    { month: "Jun", patients: 195, doctors: 22 }
+  const customerGrowth: CustomerGrowth[] = [
+    { month: "Jan", customers: 120, doctors: 15 },
+    { month: "Feb", customers: 135, doctors: 16 },
+    { month: "Mar", customers: 148, doctors: 18 },
+    { month: "Apr", customers: 162, doctors: 19 },
+    { month: "May", customers: 178, doctors: 20 },
+    { month: "Jun", customers: 195, doctors: 22 }
   ];
 
   const appointmentStats: AppointmentStats[] = [
@@ -106,7 +106,7 @@ export default function Reports() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setStats({
-        totalPatients: 195,
+        totalCustomers: 195,
         totalDoctors: 22,
         totalAppointments: 360,
         totalComplaints: 76,
@@ -199,8 +199,8 @@ export default function Reports() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Patients</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats?.totalPatients || 0}</p>
+                  <p className="text-sm font-medium text-gray-600">Total Customers</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats?.totalCustomers || 0}</p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" />
                     +12% from last month
@@ -659,7 +659,7 @@ export default function Reports() {
                     {[
                       { method: "Credit/Debit Card", percentage: 45, amount: "₹20,520" },
                       { method: "UPI/Digital Wallet", percentage: 35, amount: "₹15,960" },
-                      { method: "Cash", percentage: 15, amount: "₹6,840" },
+                      { method: "Cash", percentage: 15, amount: "���6,840" },
                       { method: "Insurance", percentage: 5, amount: "₹2,280" }
                     ].map((item, index) => (
                       <div key={index} className="space-y-2">
