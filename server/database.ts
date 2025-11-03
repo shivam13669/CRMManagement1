@@ -1383,6 +1383,37 @@ export function getHospitalByUserId(userId: number): any | undefined {
   }
 }
 
+export function getHospitalById(hospitalId: number): any | undefined {
+  try {
+    const result = db.exec(
+      `
+      SELECT h.*, u.email, u.full_name, u.phone as user_phone
+      FROM hospitals h
+      JOIN users u ON h.user_id = u.id
+      WHERE h.id = ?
+    `,
+      [hospitalId],
+    );
+
+    if (!result || result.length === 0 || !result[0] || result[0].values.length === 0) {
+      return undefined;
+    }
+
+    const columns = result[0].columns;
+    const row = result[0].values[0];
+
+    const hospital: any = {};
+    columns.forEach((col, index) => {
+      hospital[col] = row[index];
+    });
+
+    return hospital;
+  } catch (error) {
+    console.error("❌ Error getting hospital by ID:", error);
+    return undefined;
+  }
+}
+
 export function getAllHospitals(): any[] {
   try {
     const result = db.exec(`
