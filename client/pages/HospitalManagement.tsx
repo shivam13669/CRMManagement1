@@ -1076,16 +1076,16 @@ export default function HospitalManagement() {
                             <span className="text-xs text-gray-500">Type:</span>
                             <span className="font-semibold text-sm whitespace-nowrap">{hospital.hospital_type || "N/A"}</span>
                           </div>
-                          <div className="flex items-center gap-2 flex-none min-w-[100px]">
-                            <span className="text-xs text-gray-500">Beds:</span>
+                          <div className="flex flex-col gap-1 items-start flex-none min-w-[100px]">
+                            <span className="text-xs text-gray-500">Beds</span>
                             <span className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_beds || 0}</span>
                           </div>
-                          <div className="flex items-center gap-2 flex-none min-w-[120px]">
-                            <span className="text-xs text-gray-500">Ambulances:</span>
+                          <div className="flex flex-col gap-1 items-start flex-none min-w-[120px]">
+                            <span className="text-xs text-gray-500">Ambulances</span>
                             <span className="font-semibold text-sm whitespace-nowrap">{hospital.number_of_ambulances || 0}</span>
                           </div>
-                          <div className="flex items-center gap-2 flex-none min-w-[120px]">
-                            <span className="text-xs text-gray-500">License/Reg. Number:</span>
+                          <div className="flex flex-col gap-1 items-start flex-none min-w-[120px]">
+                            <span className="text-xs text-gray-500">License/Reg. Number</span>
                             <span className="font-semibold text-sm whitespace-nowrap">{hospital.license_number || "N/A"}</span>
                           </div>
                         </div>
