@@ -65,6 +65,7 @@ interface HospitalItem {
 export default function HospitalManagement() {
   const { toast } = useToast();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingHospitalId, setEditingHospitalId] = useState<number | null>(null);
   const [hospitals, setHospitals] = useState<HospitalItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
