@@ -131,7 +131,7 @@ export function StaffLayout({ children }: StaffLayoutProps) {
       case 'ambulance': return <Truck className="w-4 h-4 text-red-600" />;
       case 'feedback': return <MessageSquare className="w-4 h-4 text-orange-600" />;
       case 'appointment': return <Calendar className="w-4 h-4 text-blue-600" />;
-      case 'patient': return <Users className="w-4 h-4 text-green-600" />;
+      case 'customer': return <Users className="w-4 h-4 text-green-600" />;
       case 'inventory': return <BarChart3 className="w-4 h-4 text-purple-600" />;
       default: return <Bell className="w-4 h-4 text-gray-600" />;
     }
@@ -307,7 +307,7 @@ export function StaffLayout({ children }: StaffLayoutProps) {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search patients, requests..."
+                  placeholder="Search customers, requests..."
                   className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
