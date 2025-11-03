@@ -981,7 +981,7 @@ export default function HospitalManagement() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 gap-4">
+            <div id="hospital-list" className="grid grid-cols-1 gap-4">
               {hospitalsWithPhones.map((hospital) => (
                 <Card
                   key={hospital.id}
